@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/preprocess_data.js && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preprocess": "node scripts/preprocess_data.js"
   },
   "dependencies": {
     "fuse.js": "^7.1.0",

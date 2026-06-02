@@ -1,8 +1,5 @@
 name: Data Integrity Check
 
-# Runs on any push or PR that touches data/ files.
-# Ensures all CSVs are well-formed and have no blank IDs or missing titles.
-
 on:
   push:
     paths:
@@ -18,19 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.13
+      - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - name: Run integrity checks
         run: |
-          python - <<'EOF'
+          python - <<'PYEOF'
           import csv, sys
           from pathlib import Path
 
@@ -39,45 +35,39 @@ jobs:
           total = 0
 
           REQUIRED_COLS = {
-              'master_repository.csv': ['ID', 'Category', 'Title', 'Status', 'Link'],
-              'frameworks.csv': ['ID', 'Title', 'Issuing Authority', 'Year', 'Status'],
-              'circulars.csv': ['ID', 'Title', 'Issuing Authority', 'Status'],
-              'capacity_building.csv': ['ID', 'Title', 'Provider', 'Status'],
-              'assessment.csv': ['ID', 'Title', 'Issuing Authority', 'Status'],
-              'pedagogy.csv': ['ID', 'Title', 'Issuing Authority', 'Status'],
-              'subject_resources.csv': ['ID', 'Title', 'Subject', 'Status'],
-              'source_index.csv': ['ID', 'Source Name', 'URL'],
+              'master_repository.csv': ['ID','Category','Title','Status','Link'],
+              'frameworks.csv': ['ID','Title','Issuing Authority','Year','Status'],
+              'circulars.csv': ['ID','Title','Issuing Authority','Status'],
+              'capacity_building.csv': ['ID','Title','Provider','Status'],
+              'assessment.csv': ['ID','Title','Issuing Authority','Status'],
+              'pedagogy.csv': ['ID','Title','Issuing Authority','Status'],
+              'subject_resources.csv': ['ID','Title','Subject','Status'],
+              'source_index.csv': ['ID','Source Name','URL'],
           }
-
-          VALID_STATUSES = {'Active', 'Archived', 'Superseded', 'Pending Review'}
+          VALID_STATUSES = {'Active','Archived','Superseded','Pending Review'}
 
           for fname, required in REQUIRED_COLS.items():
               f = DATA / fname
               if not f.exists():
-                  errors.append(f'MISSING FILE: {fname}')
+                  errors.append(f'MISSING: {fname}')
                   continue
               rows = list(csv.DictReader(f.open(encoding='utf-8')))
               total += len(rows)
               for col in required:
                   if rows and col not in rows[0]:
-                      errors.append(f'{fname}: Missing required column "{col}"')
+                      errors.append(f'{fname}: Missing column "{col}"')
               for i, row in enumerate(rows, 2):
-                  if not row.get('ID', '').strip():
-                      errors.append(f'{fname} row {i}: Empty ID')
-                  if 'Title' in required and not row.get('Title', '').strip():
-                      errors.append(f'{fname} row {i}: Empty Title')
+                  if not row.get('ID','').strip():
+                      errors.append(f'{fname} row {i}: Blank ID')
+                  if 'Title' in required and not row.get('Title','').strip():
+                      errors.append(f'{fname} row {i}: Blank Title')
                   if 'Status' in row and row['Status'] and row['Status'] not in VALID_STATUSES:
-                      errors.append(f'{fname} row {i}: Invalid Status "{row["Status"]}" (must be one of {VALID_STATUSES})')
+                      errors.append(f'{fname} row {i}: Invalid Status "{row["Status"]}"')
 
-          print(f'Checked {len(REQUIRED_COLS)} files, {total} total records.')
+          print(f'Checked {len(REQUIRED_COLS)} files, {total} records.')
           if errors:
-              print(f'\n{len(errors)} error(s) found:')
-              for e in errors:
-                  print(f'  ERROR: {e}')
+              for e in errors: print(f'  ERROR: {e}')
               sys.exit(1)
           else:
               print('All integrity checks passed.')
-          EOF
-
-      - name: Summary
-        run: echo "### Data Integrity Passed" >> $GITHUB_STEP_SUMMARY
+          PYEOF

@@ -1,8 +1,5 @@
 name: Netlify — Deploy Trigger
 
-# Triggers a fresh Netlify deploy after any data update commit on main.
-# Requires NETLIFY_SITE_ID and NETLIFY_AUTH_TOKEN as GitHub repository secrets.
-
 on:
   push:
     branches: [main]
@@ -12,6 +9,7 @@ on:
       - "scripts/**"
       - "netlify.toml"
       - "package.json"
+      - "index.html"
   workflow_dispatch:
 
 jobs:
@@ -20,24 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Trigger Netlify deploy hook
         run: |
           if [ -z "$NETLIFY_DEPLOY_HOOK" ]; then
-            echo "NETLIFY_DEPLOY_HOOK secret not set. Skipping deploy trigger."
-            echo "To enable: Add NETLIFY_DEPLOY_HOOK as a GitHub repository secret."
-            echo "Get the hook URL from: Netlify Site Settings -> Build & Deploy -> Build hooks"
+            echo "NETLIFY_DEPLOY_HOOK secret not set."
+            echo "Add it at: GitHub Repo Settings -> Secrets -> Actions"
+            echo "Get URL from: Netlify -> Site Settings -> Build & Deploy -> Build hooks"
           else
-            echo "Triggering Netlify deploy..."
             curl -s -X POST "$NETLIFY_DEPLOY_HOOK"
-            echo "Deploy triggered."
+            echo "Netlify deploy triggered."
           fi
         env:
           NETLIFY_DEPLOY_HOOK: ${{ secrets.NETLIFY_DEPLOY_HOOK }}
 
       - name: Summary
-        run: |
-          echo "### Netlify Deploy Trigger" >> $GITHUB_STEP_SUMMARY
-          echo "- Triggered on push to main with data/src/scripts changes" >> $GITHUB_STEP_SUMMARY
-          echo "- Set NETLIFY_DEPLOY_HOOK in GitHub Secrets to activate" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Netlify Deploy Trigger ran" >> $GITHUB_STEP_SUMMARY

@@ -1,9 +1,12 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_API_BASE = "/.netlify/functions"
+
+[context.production.environment]
   VITE_API_BASE = "/.netlify/functions"
 
 [context.deploy-preview.environment]
@@ -13,3 +16,18 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/data-index.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/site-summary.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/search-manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
