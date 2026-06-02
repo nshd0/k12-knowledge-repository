@@ -1,0 +1,13 @@
+ID,Title,Subject,Grade Level,Provider,Platform,Resource Type,Link,Status
+SR-001,NCERT Mathematics Textbooks,Mathematics,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-002,NCERT Science Textbooks,Science,Grade 1-10,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-003,NCERT English Textbooks,English,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-004,NCERT Social Science Textbooks,Social Science,Grade 6-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-005,NCERT Hindi Textbooks,Hindi,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-006,NCERT EVS Textbooks,EVS,Grade 3-5,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-007,NCERT Computer Science Textbooks,Computer Science,Grade 9-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
+SR-008,DIKSHA Mathematics Resources,Mathematics,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active
+SR-009,DIKSHA Science Resources,Science,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active
+SR-010,CBSE Academic Resources Portal,All Subjects,Grade 9-12,CBSE,CBSE Academic,Resource Portal,https://cbseacademic.nic.in,Active
+SR-011,AI and Computational Thinking Curriculum,Artificial Intelligence,Grade 6-12,CBSE/MoE,CBSE Academic,Curriculum Resource,https://cbseacademic.nic.in,Active
+SR-012,Life Skills Education Resources,Life Skills,Grade 6-12,NCERT,NCERT,Resource,https://ncert.nic.in,Active

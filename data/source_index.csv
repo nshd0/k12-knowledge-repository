@@ -1,7 +1,13 @@
-ID,Source Name,URL,Authority Level,Update Pattern,Notes
-SI-001,Ministry of Education,https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_2020.pdf,National,Policy updates,NEP source
-SI-002,NCERT,https://ncert.nic.in/focus-group.php?ln=hi,National,Framework updates,NCF source
-SI-003,CBSE Student Circulars,https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html,National board,Frequent,Student circulars
-SI-004,CBSE SARAS Circulars,https://saras.cbse.gov.in/saras/Home/Circulars,National board,Frequent,Circular portal
-SI-005,Delhi DoE,https://www.edudel.nic.in,State,Frequent,Delhi notifications
-SI-006,DIKSHA,https://www.india.gov.in/spotlight/diksha-national-digital-infrastructure-teachers,National,Continuous,Teacher training resources
+ID,Source Name,URL,Authority Level,Update Pattern,Category,Notes
+SI-001,Ministry of Education,https://www.education.gov.in,National,Monthly,Policy and Frameworks,NEP and national education policy
+SI-002,NCERT,https://ncert.nic.in,National,Monthly,Curriculum and Textbooks,NCF frameworks and textbooks
+SI-003,CBSE Student Circulars,https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html,National Board,Weekly,Circulars,Student-related CBSE notices
+SI-004,CBSE SARAS Portal,https://saras.cbse.gov.in/saras/Home/Circulars,National Board,Weekly,Circulars,Affiliation and circulars
+SI-005,CBSE Academic,https://cbseacademic.nic.in,National Board,Monthly,Assessment and Curriculum,Sample papers syllabus rubrics
+SI-006,Delhi DoE,https://www.edudel.nic.in,State,Weekly,Circulars,Delhi state notifications
+SI-007,DIKSHA,https://diksha.gov.in,National,Weekly,Capacity Building and Resources,Teacher training and digital content
+SI-008,NIPUN Bharat,https://nipunbharat.education.gov.in,National,Monthly,Assessment,Foundational literacy and numeracy
+SI-009,PARAKH,https://parakh.gov.in,National,Monthly,Assessment,National assessment body
+SI-010,NCTE,https://ncte.gov.in,National,Quarterly,Teacher Education,Teacher education framework
+SI-011,iGOT Karmayogi,https://igotkarmayogi.gov.in,National,Monthly,Capacity Building,Government official training
+SI-012,NISHTHA,https://itpd.ncert.gov.in,National,Monthly,Capacity Building,Integrated teacher training
