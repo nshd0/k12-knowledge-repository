@@ -1,0 +1,7 @@
+ID,Source Name,URL,Authority Level,Update Pattern,Notes
+SI-001,Ministry of Education,https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_2020.pdf,National,Policy updates,NEP source
+SI-002,NCERT,https://ncert.nic.in/focus-group.php?ln=hi,National,Framework updates,NCF source
+SI-003,CBSE Student Circulars,https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html,National board,Frequent,Student circulars
+SI-004,CBSE SARAS Circulars,https://saras.cbse.gov.in/saras/Home/Circulars,National board,Frequent,Circular portal
+SI-005,Delhi DoE,https://www.edudel.nic.in,State,Frequent,Delhi notifications
+SI-006,DIKSHA,https://www.india.gov.in/spotlight/diksha-national-digital-infrastructure-teachers,National,Continuous,Teacher training resources

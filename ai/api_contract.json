@@ -1,0 +1,14 @@
+{
+  "get_relevant_resources": {
+    "input": ["stakeholder", "grade", "subject", "topic", "urgency"],
+    "output": ["title", "summary", "source", "link", "status", "reason"]
+  },
+  "summarize_document": {
+    "input": ["document_id", "audience", "length"],
+    "output": ["summary", "action_points", "source_links"]
+  },
+  "detect_updates": {
+    "input": ["source_list", "last_run"],
+    "output": ["new_items", "changed_items", "review_queue"]
+  }
+}
