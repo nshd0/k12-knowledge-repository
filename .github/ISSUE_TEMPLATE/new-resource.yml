@@ -1,0 +1,59 @@
+name: Add New Resource
+description: Request or propose a new resource to be added to the repository
+title: "[New Resource] <Title>"
+labels: ["new-resource", "data"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Resource Title
+      placeholder: e.g. CBSE Circular on Annual Day 2026
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Framework
+        - Circular
+        - Capacity Building
+        - Assessment
+        - Pedagogy
+        - Subject Resource
+    validations:
+      required: true
+  - type: input
+    id: authority
+    attributes:
+      label: Issuing Authority
+      placeholder: e.g. CBSE, NCERT, Ministry of Education
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Official Source URL
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date Issued
+      placeholder: YYYY-MM-DD
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - Active
+        - Archived
+        - Superseded
+        - Pending Review
+      default: 0
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      placeholder: Any additional context about this resource

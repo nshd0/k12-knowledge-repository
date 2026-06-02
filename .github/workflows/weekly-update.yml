@@ -1,0 +1,75 @@
+name: Weekly — Repository Data Refresh
+
+# Runs every Monday at 3:30 AM UTC (9:00 AM IST).
+# Ingests sources, tags documents, generates the weekly digest, and commits.
+
+on:
+  schedule:
+    - cron: "30 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no commit)"
+        required: false
+        default: "false"
+
+jobs:
+  weekly-refresh:
+    name: Ingest → Tag → Digest → Commit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run source ingestion
+        run: python scripts/ingest_sources.py
+
+      - name: Run document tagger
+        run: python scripts/tag_documents.py
+
+      - name: Generate weekly digest
+        run: python scripts/weekly_digest.py
+
+      - name: Write update log entry
+        run: |
+          python - <<'EOF'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          log = Path('docs/update_log.md')
+          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+          entry = f'| {today} | github-actions[bot] | Weekly automated refresh | data/, docs/weekly_digest.md |\n'
+          lines = log.read_text(encoding='utf-8').splitlines(keepends=True)
+          # Insert after header row
+          for i, line in enumerate(lines):
+              if line.startswith('|---'):
+                  lines.insert(i + 1, entry)
+                  break
+          log.write_text(''.join(lines), encoding='utf-8')
+          print(f'Update log entry added for {today}')
+          EOF
+
+      - name: Commit and push (if not dry run)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ docs/
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "chore(data): Weekly automated repository refresh [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Weekly Refresh Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- Ingest, tag, and digest scripts ran successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- Update log entry added" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry run: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY

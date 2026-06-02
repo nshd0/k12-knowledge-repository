@@ -1,4 +1,7 @@
-name: CI CD
+name: CI — Build & Validate
+
+# Runs on every push and pull request to main.
+# Validates the build, checks data files, and uploads the dist artifact.
 
 on:
   push:
@@ -9,18 +12,85 @@ on:
 
 jobs:
   build:
+    name: Install, Preprocess & Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/upload-artifact@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run data preprocessing
+        run: node scripts/preprocess_data.js
+
+      - name: Vite production build
+        run: npx vite build
+        env:
+          VITE_API_BASE: /.netlify/functions
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: dist-${{ github.sha }}
           path: dist
+          retention-days: 7
+
+  validate-data:
+    name: Validate CSV Data Files
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Check master_repository.csv exists and has rows
+        run: |
+          python - <<'EOF'
+          import csv, sys
+          from pathlib import Path
+          f = Path('data/master_repository.csv')
+          if not f.exists():
+              print('ERROR: master_repository.csv not found')
+              sys.exit(1)
+          rows = list(csv.DictReader(f.open(encoding='utf-8')))
+          if len(rows) == 0:
+              print('ERROR: master_repository.csv is empty')
+              sys.exit(1)
+          print(f'OK: {len(rows)} records found in master_repository.csv')
+          required = ['ID','Category','Title','Status','Link']
+          missing = [c for c in required if c not in rows[0]]
+          if missing:
+              print(f'ERROR: Missing required columns: {missing}')
+              sys.exit(1)
+          print(f'OK: All required columns present')
+          EOF
+
+      - name: Check source_index.csv exists
+        run: |
+          python - <<'EOF'
+          import csv, sys
+          from pathlib import Path
+          f = Path('data/source_index.csv')
+          if not f.exists():
+              print('ERROR: source_index.csv not found')
+              sys.exit(1)
+          rows = list(csv.DictReader(f.open(encoding='utf-8')))
+          print(f'OK: {len(rows)} sources in source_index.csv')
+          EOF

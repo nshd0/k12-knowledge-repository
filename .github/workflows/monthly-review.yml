@@ -1,0 +1,108 @@
+name: Monthly — Deep Source Review
+
+# Runs on the 1st of every month at 4:00 AM UTC.
+# Verifies all source URLs, checks for broken links, and reports status.
+
+on:
+  schedule:
+    - cron: "0 4 1 * *"
+  workflow_dispatch:
+
+jobs:
+  monthly-review:
+    name: Source URL Verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Verify all source URLs
+        run: |
+          python - <<'EOF'
+          import csv, json, sys
+          from pathlib import Path
+          from datetime import datetime, timezone
+          try:
+              import requests
+          except ImportError:
+              print('requests not installed'); sys.exit(1)
+
+          sources = list(csv.DictReader(Path('data/source_index.csv').open(encoding='utf-8')))
+          report = []
+          for s in sources:
+              url = s.get('URL', '').strip()
+              name = s.get('Source Name', '')
+              if not url:
+                  continue
+              try:
+                  r = requests.head(url, timeout=10, allow_redirects=True,
+                                    headers={'User-Agent': 'Mozilla/5.0 K12-Repo-Bot/1.0'})
+                  status = r.status_code
+                  ok = status < 400
+              except Exception as e:
+                  status = 'ERROR'
+                  ok = False
+              icon = 'OK' if ok else 'FAIL'
+              report.append({'source': name, 'url': url, 'status': status, 'result': icon})
+              print(f'[{icon}] {name} -> {status}')
+
+          out = Path('docs/source_health.json')
+          out.write_text(json.dumps({'checked': datetime.now(timezone.utc).isoformat(), 'results': report}, indent=2), encoding='utf-8')
+
+          failed = [r for r in report if r['result'] == 'FAIL']
+          if failed:
+              print(f'\n{len(failed)} source(s) failed health check:')
+              for f in failed:
+                  print(f"  - {f['source']}: {f['url']} -> {f['status']}")
+          else:
+              print('All sources healthy.')
+          EOF
+
+      - name: Write monthly log entry
+        run: |
+          python - <<'EOF'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          log = Path('docs/update_log.md')
+          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+          entry = f'| {today} | github-actions[bot] | Monthly source health check | docs/source_health.json |\n'
+          lines = log.read_text(encoding='utf-8').splitlines(keepends=True)
+          for i, line in enumerate(lines):
+              if line.startswith('|---'):
+                  lines.insert(i + 1, entry)
+                  break
+          log.write_text(''.join(lines), encoding='utf-8')
+          EOF
+
+      - name: Commit health report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/source_health.json docs/update_log.md
+          git diff --cached --quiet && echo "No changes" || git commit -m "chore(docs): Monthly source health report [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Monthly Source Review Complete" >> $GITHUB_STEP_SUMMARY
+          python - <<'EOF'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('docs/source_health.json').read_text())
+          ok = sum(1 for r in data['results'] if r['result'] == 'OK')
+          fail = sum(1 for r in data['results'] if r['result'] == 'FAIL')
+          print(f"- Sources checked: {len(data['results'])}")
+          print(f"- Healthy: {ok}")
+          print(f"- Failed: {fail}")
+          EOF

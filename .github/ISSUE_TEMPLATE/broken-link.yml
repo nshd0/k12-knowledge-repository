@@ -1,0 +1,28 @@
+name: Broken Link Report
+description: Report a broken or outdated source link
+title: "[Broken Link] <Resource Title>"
+labels: ["broken-link", "data"]
+body:
+  - type: input
+    id: resource_id
+    attributes:
+      label: Resource ID
+      placeholder: e.g. CR-003
+    validations:
+      required: true
+  - type: input
+    id: broken_url
+    attributes:
+      label: Broken URL
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: new_url
+    attributes:
+      label: Correct/Updated URL (if known)
+      placeholder: https://
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
