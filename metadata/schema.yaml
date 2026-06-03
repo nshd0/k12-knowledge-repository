@@ -1,0 +1,174 @@
+# IOE K12 Knowledge Repository — Document Metadata Schema
+# Every file under knowledge/ must include this frontmatter block.
+# Prefect ingestion flows validate against this schema before embedding.
+
+schema_version: "1.0"
+required_fields:
+  - title
+  - grade
+  - subject
+  - board
+  - language
+  - learning_outcome
+  - content_type
+  - review_status
+  - author
+  - source
+
+optional_fields:
+  - nep_alignment
+  - ncf_strand
+  - ncf_theme
+  - diksha_id
+  - last_reviewed
+  - tags
+  - difficulty_level
+  - estimated_duration_min
+  - prerequisite_outcomes
+
+field_definitions:
+  title:
+    type: string
+    description: Full descriptive title of the content document.
+    example: "Introduction to Artificial Intelligence"
+
+  grade:
+    type: integer
+    description: Target grade level (1–12). Use 0 for cross-grade or foundational.
+    allowed_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+  subject:
+    type: string
+    description: Subject area aligned to CBSE/NCF subject categories.
+    allowed_values:
+      - "Mathematics"
+      - "Science"
+      - "Computational Thinking"
+      - "Artificial Intelligence"
+      - "Social Science"
+      - "English"
+      - "Hindi"
+      - "Environmental Studies"
+      - "Health and Physical Education"
+      - "Art and Craft"
+      - "Work Education"
+      - "Cross-Curricular"
+
+  board:
+    type: string
+    description: Curriculum board this content is aligned to.
+    allowed_values:
+      - "CBSE"
+      - "NCF"
+      - "NEP"
+      - "DoE"
+      - "DIKSHA"
+      - "IOE"
+      - "State Board"
+
+  language:
+    type: string
+    description: Language code (ISO 639-1).
+    allowed_values: ["en", "hi", "ur", "ta", "te", "bn", "mr", "gu", "kn", "ml"]
+
+  learning_outcome:
+    type: string
+    description: |
+      Unique outcome identifier in format SUBJECT-DOMAIN-GradeGRADE-LONumber.
+      Must exist in governance/alignment_map.yaml.
+    example: "CT-AI-G7-LO1"
+
+  content_type:
+    type: string
+    description: Nature of the content document.
+    allowed_values:
+      - "lesson"
+      - "assessment"
+      - "rubric"
+      - "policy"
+      - "framework"
+      - "circular"
+      - "activity"
+      - "resource"
+      - "teacher_guide"
+      - "syllabus"
+
+  review_status:
+    type: string
+    description: |
+      Lifecycle state of the document.
+      Only 'approved' content is ingested into the RAG index.
+    allowed_values:
+      - "draft"       # work in progress, not validated
+      - "review"      # submitted for academic review
+      - "approved"    # validated and cleared for ingestion
+      - "archived"    # removed from active index
+
+  author:
+    type: string
+    description: Name or GitHub username of the content creator.
+    example: "Naushad Lucky"
+
+  source:
+    type: string
+    description: Organisation or system that produced this content.
+    allowed_values:
+      - "IOE"
+      - "MoE"
+      - "CBSE"
+      - "NCERT"
+      - "DIKSHA"
+      - "DoE"
+      - "Teacher Contributed"
+
+  nep_alignment:
+    type: string
+    description: NEP 2020 section reference.
+    example: "5.23"
+
+  ncf_strand:
+    type: string
+    description: NCF 2023 curricular area or strand.
+    example: "Science and Technology"
+
+  ncf_theme:
+    type: string
+    description: NCF 2023 thematic focus.
+    example: "AI and Digital Literacy"
+
+  diksha_id:
+    type: string
+    description: DIKSHA platform content identifier if sourced from DIKSHA.
+    example: "do_31234567890"
+
+  last_reviewed:
+    type: string
+    description: ISO 8601 date of last academic review.
+    example: "2026-06-03"
+
+  tags:
+    type: list
+    description: Free-form keywords for discovery and filtering.
+    example: ["AI", "machine learning", "NEP", "Grade 7"]
+
+  difficulty_level:
+    type: string
+    allowed_values: ["foundational", "developing", "proficient", "advanced"]
+
+  estimated_duration_min:
+    type: integer
+    description: Estimated time to complete in minutes.
+    example: 45
+
+  prerequisite_outcomes:
+    type: list
+    description: List of learning outcome IDs that should be completed before this one.
+    example: ["CT-AI-G6-LO3", "CT-AI-G6-LO4"]
+
+# Ingestion rules used by Prefect validate.py
+ingestion_rules:
+  block_on_missing_required: true
+  block_on_invalid_field_value: true
+  block_if_review_status_not_approved: true
+  warn_on_missing_optional: true
+  require_learning_outcome_in_alignment_map: true

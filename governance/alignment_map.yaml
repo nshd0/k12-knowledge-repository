@@ -1,0 +1,201 @@
+# IOE K12 Knowledge Repository — Academic Alignment Map
+# Maps learning outcome IDs to NEP 2020, NCF 2023, and CBSE objectives.
+# Prefect validate.py checks every document's learning_outcome against this file.
+# Add new outcomes here before creating content that references them.
+
+alignment_map_version: "1.0"
+last_updated: "2026-06-03"
+maintained_by: "Naushad Lucky / IOE"
+
+# ─────────────────────────────────────────────
+# COMPUTATIONAL THINKING — ARTIFICIAL INTELLIGENCE
+# ─────────────────────────────────────────────
+CT-AI:
+  description: "Computational Thinking — Artificial Intelligence domain"
+  outcomes:
+    CT-AI-G6-LO1:
+      title: "Understand what AI is and identify everyday AI applications"
+      grade: 6
+      nep_reference: "4.6, 5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI and Digital Literacy"
+      cbse_competency: "Digital Literacy and Coding — Class 6"
+      bloom_level: "Remember, Understand"
+
+    CT-AI-G6-LO2:
+      title: "Distinguish between human intelligence and machine intelligence"
+      grade: 6
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI and Digital Literacy"
+      cbse_competency: "Digital Literacy and Coding — Class 6"
+      bloom_level: "Understand, Analyse"
+
+    CT-AI-G6-LO3:
+      title: "Identify data as the foundation of AI learning"
+      grade: 6
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Data and Information"
+      cbse_competency: "Digital Literacy and Coding — Class 6"
+      bloom_level: "Understand"
+
+    CT-AI-G6-LO4:
+      title: "Use block-based tools to create simple rule-based programs"
+      grade: 6
+      nep_reference: "4.6"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Computational Thinking"
+      cbse_competency: "Coding — Class 6"
+      bloom_level: "Apply"
+
+    CT-AI-G7-LO1:
+      title: "Explain the concept and types of machine learning"
+      grade: 7
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI and Digital Literacy"
+      cbse_competency: "AI — Class 7 (CBSE AI Curriculum)"
+      bloom_level: "Understand, Analyse"
+
+    CT-AI-G7-LO2:
+      title: "Build and test a simple supervised learning model using visual tools"
+      grade: 7
+      nep_reference: "5.23, 4.6"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI and Digital Literacy"
+      cbse_competency: "AI — Class 7 (CBSE AI Curriculum)"
+      bloom_level: "Apply, Create"
+
+    CT-AI-G7-LO3:
+      title: "Discuss ethical considerations in AI including bias and fairness"
+      grade: 7
+      nep_reference: "5.23"
+      ncf_strand: "Ethical and Social Understanding"
+      ncf_theme: "AI Ethics"
+      cbse_competency: "AI — Class 7 (CBSE AI Curriculum)"
+      bloom_level: "Evaluate"
+
+    CT-AI-G8-LO1:
+      title: "Understand neural networks and deep learning concepts"
+      grade: 8
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI and Digital Literacy"
+      cbse_competency: "AI — Class 8 (CBSE AI Curriculum)"
+      bloom_level: "Understand, Analyse"
+
+    CT-AI-G8-LO2:
+      title: "Apply Python basics to create simple AI projects"
+      grade: 8
+      nep_reference: "4.6, 5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Computational Thinking"
+      cbse_competency: "AI — Class 8 (CBSE AI Curriculum)"
+      bloom_level: "Apply, Create"
+
+    CT-AI-G9-LO1:
+      title: "Analyse real-world datasets and identify patterns"
+      grade: 9
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Data Science and AI"
+      cbse_competency: "AI — Class 9 (CBSE AI Elective)"
+      bloom_level: "Analyse"
+
+    CT-AI-G10-LO1:
+      title: "Design and evaluate an AI project addressing a local problem"
+      grade: 10
+      nep_reference: "4.6, 5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "AI for Social Good"
+      cbse_competency: "AI — Class 10 (CBSE AI Elective)"
+      bloom_level: "Create, Evaluate"
+
+    CT-AI-G11-LO1:
+      title: "Implement ML algorithms and evaluate model performance"
+      grade: 11
+      nep_reference: "5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Advanced AI and Data Science"
+      cbse_competency: "Informatics Practices / CS — Class 11"
+      bloom_level: "Analyse, Evaluate, Create"
+
+    CT-AI-G12-LO1:
+      title: "Develop a complete AI solution with deployment and documentation"
+      grade: 12
+      nep_reference: "4.6, 5.23"
+      ncf_strand: "Science and Technology"
+      ncf_theme: "Advanced AI and Data Science"
+      cbse_competency: "Informatics Practices / CS — Class 12"
+      bloom_level: "Create, Evaluate"
+
+# ─────────────────────────────────────────────
+# MATHEMATICS
+# ─────────────────────────────────────────────
+MATH:
+  description: "Mathematics domain"
+  outcomes:
+    MATH-NUM-G6-LO1:
+      title: "Apply operations on integers in real-world contexts"
+      grade: 6
+      nep_reference: "4.5"
+      ncf_strand: "Mathematics"
+      ncf_theme: "Number and Operations"
+      cbse_competency: "Mathematics — Class 6"
+      bloom_level: "Apply"
+
+    MATH-ALG-G8-LO1:
+      title: "Solve linear equations in one variable"
+      grade: 8
+      nep_reference: "4.5"
+      ncf_strand: "Mathematics"
+      ncf_theme: "Algebra"
+      cbse_competency: "Mathematics — Class 8"
+      bloom_level: "Apply"
+
+# ─────────────────────────────────────────────
+# SCIENCE
+# ─────────────────────────────────────────────
+SCI:
+  description: "Science domain"
+  outcomes:
+    SCI-ENV-G6-LO1:
+      title: "Identify components of the environment and their interdependence"
+      grade: 6
+      nep_reference: "4.5"
+      ncf_strand: "Science"
+      ncf_theme: "Environment and Ecology"
+      cbse_competency: "Science — Class 6"
+      bloom_level: "Understand"
+
+# ─────────────────────────────────────────────
+# GOVERNANCE AND SAFETY RULES
+# ─────────────────────────────────────────────
+governance:
+  safety_keywords_blocklist:
+    - "violence"
+    - "abuse"
+    - "explicit"
+    - "hateful"
+    - "discriminatory"
+
+  age_bands:
+    foundational: [1, 2, 3, 4, 5]
+    preparatory: [6, 7, 8]
+    middle: [9, 10]
+    secondary: [11, 12]
+
+  approval_required_for:
+    - content_type: "assessment"
+      min_review_days: 2
+    - content_type: "policy"
+      min_review_days: 5
+    - content_type: "framework"
+      min_review_days: 5
+
+  auto_approve_allowed_for:
+    - content_type: "activity"
+      conditions: ["grade <= 5", "review_status == review"]
+    - content_type: "resource"
+      conditions: ["source in ['NCERT', 'DIKSHA', 'MoE']", "review_status == review"]

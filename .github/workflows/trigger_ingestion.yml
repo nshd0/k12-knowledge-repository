@@ -1,0 +1,198 @@
+# IOE K12 Knowledge Repository — Ingestion Trigger Workflow
+# Fires on every push or PR merge to main that touches knowledge/ or sources/.
+# Calls the Prefect ingestion flow to sync, validate, embed, and index
+# only the files changed in the triggering commit or merged PR.
+
+name: Trigger RAG Ingestion Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "knowledge/**"
+      - "sources/**"
+      - "metadata/schema.yaml"
+      - "governance/alignment_map.yaml"
+
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "knowledge/**"
+      - "sources/**"
+
+  workflow_dispatch:
+    inputs:
+      full_rebuild:
+        description: "Run a full index rebuild (true) or incremental sync (false)"
+        required: false
+        default: "false"
+      dry_run:
+        description: "Validate only, skip embedding (true/false)"
+        required: false
+        default: "false"
+
+jobs:
+  # ───────────────────────────────────────
+  # JOB 1: Validate content metadata
+  # Runs on every push and PR merge.
+  # Blocks ingestion if schema or governance checks fail.
+  # ───────────────────────────────────────
+  validate_content:
+    name: Validate Content Metadata
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation dependencies
+        run: |
+          pip install pyyaml python-frontmatter rich
+
+      - name: Detect changed files
+        id: changed
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'knowledge/**' 'sources/**' | tr '\n' ',')
+          echo "files=$CHANGED" >> $GITHUB_OUTPUT
+          echo "Changed files: $CHANGED"
+
+      - name: Run metadata schema validation
+        run: |
+          python - <<'EOF'
+          import os, sys, glob, yaml, frontmatter
+          from pathlib import Path
+
+          schema_path = "metadata/schema.yaml"
+          with open(schema_path) as f:
+              schema = yaml.safe_load(f)
+
+          required = schema["required_fields"]
+          rules = schema["ingestion_rules"]
+
+          with open("governance/alignment_map.yaml") as f:
+              alignment = yaml.safe_load(f)
+
+          # Collect all outcome IDs from alignment map
+          valid_outcomes = set()
+          for domain, domain_data in alignment.items():
+              if isinstance(domain_data, dict) and "outcomes" in domain_data:
+                  valid_outcomes.update(domain_data["outcomes"].keys())
+
+          errors = []
+          warnings = []
+          files = glob.glob("knowledge/**/*.md", recursive=True) + glob.glob("knowledge/**/*.yaml", recursive=True)
+
+          for fpath in files:
+              try:
+                  post = frontmatter.load(fpath)
+                  meta = post.metadata
+              except Exception as e:
+                  errors.append(f"{fpath}: Could not parse frontmatter — {e}")
+                  continue
+
+              # Check required fields
+              for field in required:
+                  if field not in meta or not meta[field]:
+                      errors.append(f"{fpath}: Missing required field '{field}'")
+
+              # Block non-approved content
+              if rules.get("block_if_review_status_not_approved"):
+                  status = meta.get("review_status", "")
+                  if status != "approved":
+                      errors.append(f"{fpath}: review_status is '{status}', must be 'approved' for ingestion")
+
+              # Check learning outcome exists in alignment map
+              if rules.get("require_learning_outcome_in_alignment_map"):
+                  lo = meta.get("learning_outcome", "")
+                  if lo and lo not in valid_outcomes:
+                      errors.append(f"{fpath}: learning_outcome '{lo}' not found in governance/alignment_map.yaml")
+
+          if errors:
+              print("\n❌ Validation FAILED:")
+              for e in errors:
+                  print(f"  {e}")
+              sys.exit(1)
+          else:
+              print(f"✅ Validated {len(files)} files successfully.")
+              if warnings:
+                  for w in warnings:
+                      print(f"  ⚠️  {w}")
+          EOF
+
+  # ───────────────────────────────────────
+  # JOB 2: Trigger Prefect ingestion flow
+  # Runs only after validation passes.
+  # Sends changed file list and run mode to Prefect.
+  # ───────────────────────────────────────
+  trigger_prefect_flow:
+    name: Trigger Prefect Ingestion Flow
+    runs-on: ubuntu-latest
+    needs: validate_content
+    if: |
+      needs.validate_content.result == 'success' &&
+      (github.event_name == 'push' ||
+       (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+       github.event_name == 'workflow_dispatch')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed knowledge files
+        id: diff
+        run: |
+          FILES=$(git diff --name-only HEAD~1 HEAD -- 'knowledge/**' 'sources/**' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "changed_files=$FILES" >> $GITHUB_OUTPUT
+          echo "Detected changed files: $FILES"
+
+      - name: Set run mode
+        id: mode
+        run: |
+          FULL_REBUILD="${{ github.event.inputs.full_rebuild || 'false' }}"
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+          echo "full_rebuild=$FULL_REBUILD" >> $GITHUB_OUTPUT
+          echo "dry_run=$DRY_RUN" >> $GITHUB_OUTPUT
+
+      - name: Trigger Prefect deployment via API
+        env:
+          PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
+          PREFECT_API_KEY: ${{ secrets.PREFECT_API_KEY }}
+          PREFECT_DEPLOYMENT_ID: ${{ secrets.PREFECT_DEPLOYMENT_ID }}
+        run: |
+          curl -X POST "${PREFECT_API_URL}/deployments/${PREFECT_DEPLOYMENT_ID}/create_flow_run" \
+            -H "Authorization: Bearer ${PREFECT_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "parameters": {
+                "changed_files": ${{ steps.diff.outputs.changed_files }},
+                "full_rebuild": ${{ steps.mode.outputs.full_rebuild }},
+                "dry_run": ${{ steps.mode.outputs.dry_run }},
+                "repo": "nshd0/k12-knowledge-repository",
+                "branch": "main"
+              },
+              "name": "github-triggered-${{ github.run_id }}"
+            }'
+
+      - name: Post ingestion summary
+        if: always()
+        run: |
+          echo "## IOE Ingestion Trigger Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: main" >> $GITHUB_STEP_SUMMARY
+          echo "- **Full rebuild**: ${{ steps.mode.outputs.full_rebuild }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry run**: ${{ steps.mode.outputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Changed files**: ${{ steps.diff.outputs.changed_files }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Validation**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
