@@ -30,6 +30,7 @@ jobs:
           cd scraper
           python orchestrator.py
         env:
+                PYTHONPATH: ${{ github.workspace }}
           PYTHONUNBUFFERED: 1
       
       - name: Validate scraped data
