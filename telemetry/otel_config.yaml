@@ -1,0 +1,88 @@
+# otel_config.yaml - OpenTelemetry Collector for IOE EdTech Platform
+# Planes covered: Ingestion (Prefect), Retrieval, LangGraph Agents, Governance
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: prefect_ingestion
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['localhost:8080']
+        - job_name: retrieval_service
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['localhost:8000']
+        - job_name: langgraph_agents
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['localhost:8001']
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1000
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 15
+  resource:
+    attributes:
+      - key: service.namespace
+        value: ioe-edtech
+        action: upsert
+      - key: deployment.environment
+        value: production
+        action: upsert
+
+exporters:
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: ioe_edtech
+    const_labels:
+      platform: k12-rag
+  logging:
+    loglevel: info
+  otlp/grafana:
+    endpoint: "http://grafana-agent:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [jaeger, logging]
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheus, logging]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [logging]
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      address: 0.0.0.0:8888
+
+# Key IOE EdTech metrics:
+# ioe_edtech_token_usage_total        (counter)   labels: agent_role, model
+# ioe_edtech_retrieval_latency_ms     (histogram) labels: query_type, grade
+# ioe_edtech_student_response_accuracy (gauge)    labels: subject, grade
+# ioe_edtech_ingestion_docs_total     (counter)   labels: source, status
+# ioe_edtech_governance_checks_total  (counter)   labels: result
+# ioe_edtech_embedding_latency_ms     (histogram) labels: model
