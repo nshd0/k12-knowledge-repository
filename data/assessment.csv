@@ -1,9 +1,15 @@
 ID,Title,Issuing Authority,Assessment Type,Grade Level,Subject,Link,Status,Notes
-AS-001,NIPUN Bharat,Ministry of Education,Foundational,Grade 1-5,Literacy and Numeracy,https://nipunbharat.education.gov.in,Active,Mission-mode national programme
-AS-002,PARAKH Assessment Framework,MoE/NCERT,Holistic Assessment,All,All,https://parakh.gov.in,Active,Replaces board-centric approach
-AS-003,CBSE Sample Papers,CBSE,Board Exam,Grade 10 and 12,All Subjects,https://cbseacademic.nic.in,Active,Updated annually
-AS-004,NAS National Achievement Survey,NCERT/MoE,National Survey,Grade 3 5 8 10,All Subjects,https://ncert.nic.in,Active,Periodic national survey
-AS-005,Learning Outcomes NCF 2023,NCERT,Competency Framework,Grade 1-12,All Subjects,https://ncert.nic.in,Active,Core curriculum reference
-AS-006,Competency-Based Rubrics,CBSE/NCERT,Rubric,Grade 6-12,All Subjects,https://cbseacademic.nic.in,Active,For classroom use
-AS-007,CBSE Marking Scheme,CBSE,Board Exam,Grade 10 and 12,All Subjects,https://cbseacademic.nic.in,Active,Updated annually
-AS-008,Formative Assessment Manual,CBSE/NCERT,Formative,Grade 1-12,All Subjects,https://cbseacademic.nic.in,Active,Practical guide
+AS-001,NIPUN Bharat,Ministry of Education,Foundational,Grade 1-5,Literacy and Numeracy,https://nipunbharat.education.gov.in,Active,Mission-mode foundational programme for FLN by Grade 3
+AS-002,PARAKH Assessment Framework,MoE/NCERT,Holistic Assessment,All,All,https://parakh.gov.in,Active,National framework for Performance Assessment Review and Analysis of Knowledge - replacing board-centric approach
+AS-003,CBSE Sample Papers 2025-26,CBSE,Board Exam,Grade 10 and 12,All Subjects,https://cbseacademic.nic.in,Active,Annual CBSE sample question papers updated for 2025-26 session
+AS-004,NAS National Achievement Survey,NCERT/MoE,National Survey,Grade 3 5 8 10,All Subjects,https://ncert.nic.in,Active,Periodic national survey to assess learning levels of students across India
+AS-005,Learning Outcomes NCF 2023,NCERT,Competency Framework,Grade 1-12,All Subjects,https://ncert.nic.in,Active,Grade-wise and subject-wise learning outcomes from NCF 2023
+AS-006,Competency-Based Assessment Rubrics,CBSE/NCERT,Rubric,Grade 6-12,All Subjects,https://cbseacademic.nic.in,Active,Rubric templates for competency-based grading and holistic assessment
+AS-007,CBSE Marking Scheme 2025-26,CBSE,Board Exam,Grade 10 and 12,All Subjects,https://cbseacademic.nic.in,Active,Official CBSE marking scheme documents updated for 2025-26 examinations
+AS-008,Formative Assessment Manual,CBSE/NCERT,Formative,Grade 1-12,All Subjects,https://cbseacademic.nic.in,Active,Practical classroom assessment guide for teachers
+AS-009,PARAKH Rashtriya Sarvekshan 2024,NCERT/PARAKH,Large-Scale National Survey,Foundational Preparatory Middle Stage,All Subjects,https://parakh.ncert.gov.in/sites/default/files/2025-07/REPORT_India_IND.pdf,Active,National survey conducted December 4 2024 assessing competencies at foundational preparatory and middle stages - national report published 2025
+AS-010,CBSE Two Board Examinations Class X Framework,CBSE,Board Exam,Grade 10,All Subjects,https://www.cbse.gov.in,Active,New framework for conducting two board examinations per year for Class X - introduced 2025-26
+AS-011,CBSE On-Screen Marking OSM Class XII,CBSE,Board Exam,Grade 12,All Subjects,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Introduction of On-Screen Marking for Class XII board examinations from 2026
+AS-012,CBSE APAAR Academic Bank of Credits,CBSE,Academic Records,All,All,https://www.cbse.gov.in,Active,APAAR ID - Academic Bank of Credits for students as part of NEP 2020 implementation - mandated from 2025
+AS-013,CBSE Curriculum Secondary 2026-27 Assessment Structure,CBSE,Board Exam,Grade 9 to Grade 12,All Subjects,https://cbseacademic.nic.in/curriculum_2027.html,Active,New NCF-SE 2023 aligned assessment and evaluation structure for Classes 9-12 academic session 2026-27
+AS-014,CTET February 2026,CBSE,Teacher Eligibility Test,All,All Teacher Subjects,https://ctet.nic.in,Active,Central Teacher Eligibility Test February 2026 - results declared March 31 2026
