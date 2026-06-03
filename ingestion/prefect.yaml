@@ -1,0 +1,28 @@
+# IOE K12 Knowledge Repository - Prefect Deployment Config
+# Run: prefect deploy -p ingestion/prefect.yaml
+
+prefect-version: "3.0.0"
+
+deployments:
+  - name: ioe-k12-github-ingestion
+    description: >
+      Sync changed knowledge/ and sources/ files from GitHub,
+      validate metadata against governance rules,
+      and update the RAG vector index.
+    entrypoint: ingestion/flows/sync_github.py:github_ingestion_flow
+    parameters:
+      changed_files: []
+      full_rebuild: false
+      dry_run: false
+      repo: "nshd0/k12-knowledge-repository"
+      branch: "main"
+    work_pool:
+      name: default-agent-pool
+      work_queue_name: default
+    schedules: []
+    tags:
+      - ioe
+      - k12
+      - ingestion
+      - rag
+    enforce_parameter_schema: false
