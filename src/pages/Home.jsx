@@ -21,8 +21,7 @@ const categories = [
 export default function Home() {
   const [summary, setSummary] = useState({ total_items: 0, active_items: 0, categories: [] })
   useEffect(() => {
-    fetch('/site-summary.json').then(r => r.json()).then(setSummary).catch(() => {})
-  }, [])
+    fetch(`${import.meta.env.BASE_URL}site-summary.json`).then(r => r.json()).then(setSummary).catch(() => {})  }, [])
 
   return (
     <div className="page-home">
