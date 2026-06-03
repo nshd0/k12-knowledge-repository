@@ -1,0 +1,160 @@
+# IOE K12 Knowledge Repository — Safety & Age-Appropriateness Rules
+# Enforced by ingestion/flows/validate.py and .github/workflows/trigger_ingestion.yml
+
+version: "1.0"
+last_updated: "2026-06-03"
+maintainer: "Naushad Lucky / IOE Team"
+
+# ---------------------------------------------------------------------------
+# Age band definitions (maps to Indian school grade bands)
+# ---------------------------------------------------------------------------
+age_bands:
+  foundational:
+    grades: [1, 2, 3, 4, 5]
+    age_range: "6-11"
+    nep_stage: "Foundational Stage"
+  preparatory:
+    grades: [6, 7, 8]
+    age_range: "11-14"
+    nep_stage: "Preparatory Stage"
+  middle:
+    grades: [9, 10]
+    age_range: "14-16"
+    nep_stage: "Middle Stage"
+  secondary:
+    grades: [11, 12]
+    age_range: "16-18"
+    nep_stage: "Secondary Stage"
+
+# ---------------------------------------------------------------------------
+# Blocked content categories (auto-reject, no human override)
+# ---------------------------------------------------------------------------
+blocked_categories:
+  - id: CAT-001
+    name: self_harm
+    description: Content that promotes, glorifies, or instructs self-harm or suicide.
+    applies_to_all_grades: true
+
+  - id: CAT-002
+    name: explicit_content
+    description: Sexually explicit or pornographic content.
+    applies_to_all_grades: true
+
+  - id: CAT-003
+    name: hate_speech
+    description: Content that promotes hatred based on caste, religion, gender, ethnicity, disability.
+    applies_to_all_grades: true
+
+  - id: CAT-004
+    name: extremist_content
+    description: Content that promotes terrorism, violent extremism, or radicalization.
+    applies_to_all_grades: true
+
+  - id: CAT-005
+    name: illegal_activity
+    description: Content that instructs or facilitates illegal activities under Indian law.
+    applies_to_all_grades: true
+
+  - id: CAT-006
+    name: personal_data
+    description: Content containing PII such as Aadhaar numbers, phone numbers, or student records.
+    applies_to_all_grades: true
+
+# ---------------------------------------------------------------------------
+# Keyword blocklist (exact and partial match, case-insensitive)
+# ---------------------------------------------------------------------------
+keyword_blocklist:
+  absolute_block:
+    - "suicide"
+    - "kill yourself"
+    - "self-harm"
+    - "pornography"
+    - "porn"
+    - "terrorist"
+    - "bomb making"
+    - "drug synthesis"
+    - "child abuse"
+    - "rape"
+    - "nazi"
+    - "jihad" # only in non-academic context — flag for review
+
+  flag_for_review:
+    - "violence"
+    - "weapon"
+    - "alcohol"
+    - "tobacco"
+    - "gambling"
+    - "dark web"
+    - "hacking" # flag — acceptable in academic cybersecurity context
+
+# ---------------------------------------------------------------------------
+# Grade-band content rules
+# ---------------------------------------------------------------------------
+rules:
+  - id: SAFE-001
+    description: >
+      Foundational and preparatory content must avoid explicit or graphic
+      descriptions of violence, death, or disturbing events.
+    applies_to_grades: [1, 2, 3, 4, 5, 6, 7, 8]
+    action: block
+
+  - id: SAFE-002
+    description: >
+      Secondary content may mention sensitive historical or social topics
+      only in a factual, age-appropriate, curriculum-aligned academic context.
+    applies_to_grades: [9, 10, 11, 12]
+    action: flag_for_review
+
+  - id: SAFE-003
+    description: No content may encourage harmful, illegal, or unethical behaviour.
+    applies_to_grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    action: block
+
+  - id: SAFE-004
+    description: >
+      AI and technology content must not include instructions for generating
+      malware, bypassing security systems, or misusing AI tools.
+    applies_to_grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    action: block
+
+  - id: SAFE-005
+    description: >
+      Content about data privacy and digital citizenship must promote
+      responsible use; must not include examples of real PII.
+    applies_to_grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    action: block
+
+  - id: SAFE-006
+    description: >
+      Foundational stage content must use simple, positive language.
+      Avoid negative stereotypes about gender, region, or socioeconomic background.
+    applies_to_grades: [1, 2, 3, 4, 5]
+    action: flag_for_review
+
+# ---------------------------------------------------------------------------
+# Approval thresholds by content type
+# ---------------------------------------------------------------------------
+approval_requirements:
+  lesson:
+    auto_approve_if: ["review_status == approved", "no_blocked_keywords", "learning_outcome_mapped"]
+    human_review_required_if: ["flag_for_review_keyword_found", "grade <= 5"]
+
+  assessment:
+    auto_approve_if: ["review_status == approved", "no_blocked_keywords"]
+    human_review_required_if: ["contains_sensitive_topic", "new_contributor"]
+
+  policy:
+    human_review_required_if: ["always"]
+    notes: "Policy documents always require human approval before indexing."
+
+  curriculum:
+    human_review_required_if: ["board_alignment_changed", "outcome_deleted"]
+
+# ---------------------------------------------------------------------------
+# Escalation contacts
+# ---------------------------------------------------------------------------
+escalation:
+  primary_reviewer: "Naushad Lucky"
+  github_handle: "@nshd0"
+  review_sla_hours: 48
+  auto_archive_after_days: 90
