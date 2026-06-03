@@ -1,13 +1,21 @@
-ID,Title,Subject,Grade Level,Provider,Platform,Resource Type,Link,Status
-SR-001,NCERT Mathematics Textbooks,Mathematics,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-002,NCERT Science Textbooks,Science,Grade 1-10,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-003,NCERT English Textbooks,English,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-004,NCERT Social Science Textbooks,Social Science,Grade 6-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-005,NCERT Hindi Textbooks,Hindi,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-006,NCERT EVS Textbooks,EVS,Grade 3-5,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-007,NCERT Computer Science Textbooks,Computer Science,Grade 9-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active
-SR-008,DIKSHA Mathematics Resources,Mathematics,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active
-SR-009,DIKSHA Science Resources,Science,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active
-SR-010,CBSE Academic Resources Portal,All Subjects,Grade 9-12,CBSE,CBSE Academic,Resource Portal,https://cbseacademic.nic.in,Active
-SR-011,AI and Computational Thinking Curriculum,Artificial Intelligence,Grade 6-12,CBSE/MoE,CBSE Academic,Curriculum Resource,https://cbseacademic.nic.in,Active
-SR-012,Life Skills Education Resources,Life Skills,Grade 6-12,NCERT,NCERT,Resource,https://ncert.nic.in,Active
+ID,Title,Subject,Grade Level,Provider,Platform,Resource Type,Link,Status,Notes
+SR-001,NCERT Mathematics Textbooks,Mathematics,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download - Classes 1-8 new NCF-SE 2023 aligned; Classes 9-12 existing
+SR-002,NCERT Science Textbooks,Science,Grade 1-10,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download - new aligned textbooks for Classes 1-8
+SR-003,NCERT English Textbooks,English,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download
+SR-004,NCERT Social Science Textbooks,Social Science,Grade 6-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download - Exploring Society India and Beyond Vol II for Class 8 released 2025-26
+SR-005,NCERT Hindi Textbooks,Hindi,Grade 1-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download
+SR-006,NCERT EVS Textbooks,EVS,Grade 3-5,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download
+SR-007,NCERT Computer Science and IT Textbooks,Computer Science,Grade 9-12,NCERT,NCERT,Textbook,https://ncert.nic.in/textbook.php,Active,Free download
+SR-008,DIKSHA Mathematics Resources,Mathematics,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active,Interactive content - curated math modules videos and activities
+SR-009,DIKSHA Science Resources,Science,Grade 1-10,DIKSHA,DIKSHA,Digital Resource,https://diksha.gov.in,Active,Interactive content
+SR-010,CBSE Academic Resources Portal,All Subjects,Grade 9-12,CBSE,CBSE Academic,Resource Portal,https://cbseacademic.nic.in,Active,Sample papers question banks syllabi and study material
+SR-011,AI and Computational Thinking Curriculum,Artificial Intelligence,Grade 6-12,CBSE/MoE,CBSE,Curriculum Resource,https://cbseacademic.nic.in,Active,NEP-aligned AI and CT resources; CBSE CT and AI guidelines released April 2026
+SR-012,Life Skills Education Resources,Life Skills,Grade 6-12,NCERT,NCERT,Resource,https://ncert.nic.in,Active,Holistic education focus aligned with NEP 2020
+SR-013,NCERT New Textbooks Classes 1-3 and 6 NCF-SE 2023,All Subjects,Grade 1-3 and 6,NCERT,NCERT,Textbook,https://ncert.nic.in/list-publication.php?ln=en,Active,First phase of new NCF-SE 2023 aligned textbooks - released academic session 2024-25
+SR-014,NCERT New Textbooks Classes 4 5 7 8 NCF-SE 2023,All Subjects,Grade 4 5 7 8,NCERT,NCERT,Textbook,https://ncert.nic.in/list-publication.php?ln=en,Active,New competency-based textbooks released March 2025 for academic session 2025-26
+SR-015,NCERT New Textbooks Class 9 NCF-SE 2023,All Subjects,Grade 9,NCERT,NCERT,Textbook,https://ncert.nic.in/list-publication.php?ln=en,Active,Under development - to be implemented from academic session 2026-27; draft available on NCERT website
+SR-016,NCERT Bridge Programme Grades 5 and 8,All Subjects,Grade 5 and 8,NCERT,NCERT,Bridge Programme,https://ncert.nic.in,Active,Bridge Programme for smooth transition to new NCF-SE 2023 curriculum for Grades 5 and 8 - 2025-26
+SR-017,CBSE Curriculum 2026-27 Classes IX to XII,All Subjects,Grade 9-12,CBSE,CBSE Academic,Curriculum Document,https://cbseacademic.nic.in/curriculum_2027.html,Active,New NCF-SE 2023 aligned curriculum with 30% syllabus revision for Class 10; released April 2026
+SR-018,SWAYAM Online Courses Classes XI-XII,All Subjects,Grade 11 and 12,NCERT,SWAYAM,Online Course,https://swayam.gov.in,Active,NCERT online courses for secondary students on SWAYAM portal - April 2026
+SR-019,DIKSHA NISHTHA Foundational Literacy Numeracy Courses,Foundational Literacy and Numeracy,Grade 1-5,NCERT/MoE,DIKSHA,Online Course,https://diksha.gov.in,Active,NISHTHA FLN courses for teachers aligned with NIPUN Bharat
+SR-020,NCERT CIET Digital Learning Resources,All Subjects,Grade 1-12,NCERT/CIET,DIKSHA,Digital Resource,https://ciet.ncert.gov.in,Active,CIET NCERT digital content including videos simulations and e-content on DIKSHA
