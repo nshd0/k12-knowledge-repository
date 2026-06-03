@@ -44,7 +44,7 @@ jobs:
         continue-on-error: true
       
       - name: Upload scraped data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: scraped-data-${{ github.run_number }}
           path: |
@@ -52,7 +52,7 @@ jobs:
             scraper/logs/
       
       - name: Upload validation reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: validation-reports-${{ github.run_number }}
           path: scraper/validation_reports/
