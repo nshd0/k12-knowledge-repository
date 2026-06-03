@@ -1,9 +1,21 @@
 ID,Title,Provider,Program Type,Audience,Platform,Link,Status,Notes
-CB-001,DIKSHA Teacher Platform,Ministry of Education,Digital Learning,Teachers,DIKSHA,https://diksha.gov.in,Active,Primary national platform
-CB-002,CBSE Teacher Training Programs,CBSE,Professional Development,Teachers,CBSE,https://www.cbse.gov.in,Active,Subject-specific training
-CB-003,NCERT In-Service Training,NCERT,Workshop and Module,Teachers,NCERT,https://ncert.nic.in,Active,NCERT-run programs
-CB-004,NISHTHA Program,Ministry of Education,National Program,School Heads and Teachers,DIKSHA,https://itpd.ncert.gov.in,Active,Integrated teacher training
-CB-005,NISHTHA 3.0 Online Modules,Ministry of Education,Online Course,Teachers,DIKSHA,https://diksha.gov.in,Active,Foundational literacy and numeracy focus
-CB-006,Delhi Teacher Training Programs,Directorate of Education Delhi,State Program,Teachers,Delhi DoE,https://www.edudel.nic.in,Active,State-level training
-CB-007,CBSE School Leadership Program,CBSE,Leadership,Principals,CBSE,https://www.cbse.gov.in,Active,For school leaders
-CB-008,iGOT Karmayogi Platform,Ministry of Personnel,Online Platform,Government Officials,iGOT,https://igotkarmayogi.gov.in,Active,Education officials
+CB-001,DIKSHA Teacher Platform,Ministry of Education,Digital Learning,Teachers,DIKSHA,https://diksha.gov.in,Active,Core national teacher platform with courses and modules
+CB-002,CBSE Teacher Training Programs,CBSE,Professional Development,Teachers,CBSE,https://www.cbse.gov.in,Active,CBSE official teacher capacity building and training programs
+CB-003,NCERT In-Service Training,NCERT,Workshop and Module,Teachers,NCERT,https://ncert.nic.in,Active,NCERT in-service training modules for school teachers
+CB-004,NISHTHA Program,Ministry of Education,National Program,School Heads and Teachers,DIKSHA,https://itpd.ncert.gov.in,Active,National Initiative for School Heads and Teachers Holistic Advancement
+CB-005,NISHTHA 3.0 Online Modules,Ministry of Education,Online Course,Teachers,DIKSHA,https://diksha.gov.in,Active,Foundational literacy and numeracy focus - available on DIKSHA
+CB-006,Delhi Teacher Training Programs,Directorate of Education Delhi,State Program,Teachers,Delhi DoE,https://www.edudel.nic.in,Active,Capacity building programs run by Directorate of Education Delhi
+CB-007,CBSE School Leadership Program,CBSE,Leadership,Principals,CBSE,https://www.cbse.gov.in,Active,School principal and leadership development program
+CB-008,iGOT Karmayogi Platform,Ministry of Personnel,Online Platform,Government Officials,iGOT,https://igotkarmayogi.gov.in,Active,Government of India platform for capacity building including education officials
+CB-009,CBSE National Teachers Conference NTC 2026 CT and AI,CBSE,Conference,Teachers,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,National Teachers Conference 2026 on Computational Thinking and Understanding AI - May 2026
+CB-010,CBSE Innovation Education Conclave IEC 2026,CBSE,Conclave,Teachers and Principals,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Innovation Education Conclave at Agastya Creativity Campus Andhra Pradesh - May 2026
+CB-011,CBSE Online Series on AI for Educators 2025,CBSE,Online Training,Teachers,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Online Series on Artificial Intelligence for Educators - October 2025
+CB-012,CBSE 14 New Capacity Building Programmes CPD,CBSE,Professional Development,Teachers,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Launch of 14 New Capacity Building Programmes for CPD of Teachers - September 2025
+CB-013,CBSE PRERANA Experiential Learning Programme,CBSE,Experiential Learning,Teachers and Students,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,PRERANA Experiential Learning Programme registration - December 2025
+CB-014,CBSE Online Training Dyslexia,CBSE,Specialized Training,Teachers,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Five-Day Online Training on Dyslexia for teachers - October 2025
+CB-015,CBSE Diploma Guidance and Counselling 2026,CBSE,Diploma Course,School Counselors,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Diploma Course in Guidance and Counselling 2026 - nominations invited
+CB-016,CBSE Skill Education Implementation Classes VI-VIII,CBSE,Mandatory Training,Teachers,CBSE,https://www.cbse.gov.in/cbsenew/misc.html,Active,Capacity building for mandatory implementation of Skill Education in Classes VI-VIII - December 2025
+CB-017,NCERT SWAYAM Online Courses Classes XI-XII,NCERT,Online Course,Teachers and Students,SWAYAM,https://swayam.gov.in,Active,Online courses for Classes XI and XII offered by NCERT on SWAYAM Portal - April 2026
+CB-018,NCERT CIET Digital Content Creation Workshop,NCERT/CIET,Workshop,Teachers,CIET NCERT,https://ciet.ncert.gov.in,Active,3-day capacity building workshop on creating high-quality digital content and courses - November 2025
+CB-019,CBSE Orientation Program on Entrance Exams and Career Pathways,CBSE,Orientation,Principals and Counselors,CBSE,https://www.cbse.gov.in/cbsenew/misc.html,Active,Orientation Programs on Entrance Exams and Career Pathways - December 2025
+CB-020,CBSE Language Learning Programmes NCERT English Teachers,CBSE,Language Training,Teachers,CBSE Training,https://cbseit.in/cbse/2022/ET/announcement,Active,Language Learning Programmes of NCERT for School Teachers of English - April 2026
