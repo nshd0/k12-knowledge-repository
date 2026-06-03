@@ -1,9 +1,31 @@
 ID,Title,Issuing Authority,Circular Type,Date,Grade Level,Link,Status,Notes
-CR-001,CBSE Student Circulars,CBSE,Student,Ongoing,All,https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html,Active,Check weekly
-CR-002,CBSE SARAS Circulars Portal,CBSE,Affiliation and Circular,Ongoing,All,https://saras.cbse.gov.in/saras/Home/Circulars,Active,Check weekly
-CR-003,Delhi DoE Circulars,Directorate of Education Delhi,State Circular,Ongoing,All,https://www.edudel.nic.in,Active,Check weekly
-CR-004,Ministry of Education Notifications,Ministry of Education,National Policy,Ongoing,All,https://www.education.gov.in,Active,Check monthly
-CR-005,CBSE Exam Date Sheet,CBSE,Examination,Annual,Grade 10 and 12,https://www.cbse.gov.in,Active,Annual release
-CR-006,CBSE Board Exam Results,CBSE,Examination,Annual,Grade 10 and 12,https://www.cbse.gov.in,Active,Annual release
+CR-001,CBSE Student Circulars,CBSE,Student,Ongoing,All,https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html,Active,Regular updates
+CR-002,CBSE SARAS Circulars Portal,CBSE,Affiliation and Circular,Ongoing,All,https://saras.cbse.gov.in/saras/Home/Circulars,Active,Primary circular source
+CR-003,Delhi DoE Circulars,Directorate of Education Delhi,State Circular,Ongoing,All,https://www.edudel.nic.in,Active,State-level circulars
+CR-004,Ministry of Education Notifications,Ministry of Education,National Policy,Ongoing,All,https://www.education.gov.in,Active,National policy notifications
+CR-005,CBSE Exam Date Sheet,CBSE,Examination,Annual,Grade 10 and 12,https://www.cbse.gov.in,Active,Updated annually
+CR-006,CBSE Board Exam Results,CBSE,Examination,Annual,Grade 10 and 12,https://www.cbse.gov.in,Active,Annual updates
 CR-007,CBSE School Affiliation Circulars,CBSE,Compliance,Annual,All,https://saras.cbse.gov.in,Active,Annual compliance
-CR-008,Delhi School Admission Notifications,Directorate of Education Delhi,Admission,Annual,Grade 1-9,https://www.edudel.nic.in,Active,Annual release
+CR-008,Delhi School Admission Notifications,Directorate of Education Delhi,Admission,Annual,Grade 1 to Grade 9,https://www.edudel.nic.in,Active,Yearly notifications
+CR-009,CBSE Curriculum 2026-27 Released,CBSE,Academic,2026-04-01,Grade 9 to Grade 12,https://cbseacademic.nic.in/curriculum_2027.html,Active,New NCF-SE 2023 aligned curriculum for Classes 9-12 released April 2026
+CR-010,CBSE Second Board Exam Datesheet Class X 2026,CBSE,Examination,2026-04-23,Grade 10,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Second board exam datesheet for Class X 2026
+CR-011,Post Result Facilities Class XII 2025-26,CBSE,Examination,2026-05-15,Grade 12,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Notice for post result declaration facilities
+CR-012,CBSE On-Screen Marking Class XII,CBSE,Examination,2026-02-09,Grade 12,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Introduction of OSM for Class XII board examinations
+CR-013,CBSE Practical Examination Guidelines 2026,CBSE,Examination,2025-12-01,Grade 10 and 12,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Guidelines and SOPs for Practical Examination 2026
+CR-014,CBSE Two Board Examinations Class X,CBSE,Academic,2025-11-19,Grade 10,https://www.cbse.gov.in/cbsenew/examination_circular.html,Active,Webinar on conduct of two board examinations for Class X
+CR-015,SARAS Circular 09/2026 Bridge Course Primary Teachers,CBSE,Affiliation,2026-03-30,All,https://saras.cbse.gov.in/saras/Home/Circulars,Active,Six-month bridge course for in-service primary teachers per Supreme Court order
+CR-016,SARAS Circular 07/2026 Affiliation Applications 2027-28,CBSE,Affiliation,2026-02-26,All,https://saras.cbse.gov.in/saras/Home/Circulars,Active,Submission of affiliation applications for session 2027-28
+CR-017,SARAS Circular 02/2026 Counselor and Wellness Teacher,CBSE,Affiliation,2026-01-19,All,https://saras.cbse.gov.in/saras/Home/Circulars,Active,Amendment regarding appointment of Counselor and Wellness Teacher in CBSE schools
+CR-018,CBSE Academic Circular Acad-25/2026 R3 Class VI,CBSE,Academic,2026-05-01,Grade 6,https://cbseacademic.nic.in/circulars.html,Active,Compliance with Introduction of R3 in Class VI
+CR-019,CBSE Academic Y-SMilES Programme,CBSE,Academic,2026-05-01,All,https://cbseacademic.nic.in/circulars.html,Active,Introduction of Y-SMilES Programme and Orientation Webinar for CBSE Schools
+CR-020,CBSE Skill Education Capacity Building Classes VI-VIII,CBSE,Capacity Building,2025-12-31,Grade 6 to Grade 8,https://www.cbse.gov.in/cbsenew/misc.html,Active,Mandatory implementation of Skill Education in classes VI-VIII
+CR-021,CBSE Parenting Calendar 2025-26,CBSE,Miscellaneous,2025-04-01,All,https://www.cbse.gov.in/cbsenew/misc.html,Active,CBSE Parenting Calendar for Academic Session 2025-26
+CR-022,CTET February 2026 Result,CBSE,Miscellaneous,2026-03-31,All,https://www.cbse.gov.in/cbsenew/misc.html,Active,Public notice on CTET February 2026 result
+CR-023,CBSE TRG-07-2026 National Teachers Conference CT and AI,CBSE,Training,2026-05-05,All,https://cbseit.in/cbse/2022/ET/announcement,Active,National Teachers Conference 2026 on Computational Thinking and Understanding AI
+CR-024,CBSE TRG-08-2026 Innovation Education Conclave 2026,CBSE,Training,2026-05-15,All,https://cbseit.in/cbse/2022/ET/announcement,Active,Innovation Education Conclave at Agastya Creativity Campus Andhra Pradesh
+CR-025,CBSE TRG-06-2026 NCERT SWAYAM Online Courses XI-XII,CBSE,Training,2026-04-22,Grade 11 and 12,https://cbseit.in/cbse/2022/ET/announcement,Active,Online courses for Classes XI and XII offered by NCERT on SWAYAM Portal
+CR-026,CBSE TRG-05-2026 Language Learning NCERT English Teachers,CBSE,Training,2026-04-21,All,https://cbseit.in/cbse/2022/ET/announcement,Active,Language Learning Programmes of NCERT for School Teachers of English
+CR-027,Computational Thinking and AI Guidelines Notification 2026,CBSE,Training,2026-04-09,All,https://cbseit.in/cbse/2022/ET/announcement,Active,CT and Understanding AI guidelines released by CBSE training division
+CR-028,CBSE APAAR ID Implementation Circular,CBSE,Academic,2025-01-24,All,https://www.cbse.gov.in/cbsenew/documents/Circular_Implementation_APAAR_ID_24012025.pdf,Active,APAAR ID generation for students circular
+CR-029,CBSE LOC Submission Class X XII 2025-26,CBSE,Examination,2025-09-15,Grade 10 and 12,https://www.cbse.gov.in,Active,Submission of List of Candidates for Classes X and XII 2025-26
+CR-030,CBSE Hub and Spoke School Model Orientation,CBSE,Academic,2025-12-19,All,https://www.cbse.gov.in/cbsenew/misc.html,Active,Orientation Program on CBSE Hub and Spoke School Model for CBSE Schools
