@@ -1,7 +1,13 @@
-ID,Title,Issuing Authority,Year,Grade Level,Description,Link,Status
-FW-001,National Education Policy 2020,Ministry of Education,2020,All,Transforms Indian education across all levels,https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_2020.pdf,Active
-FW-002,NCF School Education 2023,NCERT,2023,All,National Curriculum Framework replacing NCF 2005,https://ncert.nic.in,Active
-FW-003,NCF Foundational Stage 2022,NCERT,2022,Pre-School to Grade 2,Framework for children aged 3-8 years,https://ncert.nic.in,Active
-FW-004,National Assessment Framework,NCERT/MoE,2022,All,Competency-based assessment framework,https://ncert.nic.in,Active
-FW-005,NDEAR,Ministry of Education,2021,All,National Digital Education Architecture for interoperable ecosystem,https://www.education.gov.in,Active
-FW-006,NCF Teacher Education 2009,NCTE,2009,All,Pre-service and in-service teacher education framework,https://ncte.gov.in,Active
+ID,Title,Issuing Authority,Year,Grade Level,Description,Link,Status,Notes
+FW-001,National Education Policy 2020,Ministry of Education,2020,All,Core national education policy transforming Indian education at all levels,https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_2020.pdf,Active,Official document
+FW-002,NCF School Education 2023,NCERT,2023,All,National Curriculum Framework for School Education replacing NCF 2005,https://ncert.nic.in/focus-group.php?ln=hi,Active,Latest NCERT framework - implementation in progress across grades
+FW-003,NCF Foundational Stage 2022,NCERT,2022,Pre-School to Grade 2,Curriculum framework for children aged 3-8 (Foundational Stage) - Anganwadi and Grade 1-2,https://ncert.nic.in/focus-group.php?ln=hi,Active,Covers Anganwadi and Grade 1-2
+FW-004,National Assessment Framework,NCERT/MoE,2022,All,Competency-based assessment framework aligned with NCF 2023,https://ncert.nic.in,Active,National assessment alignment
+FW-005,National Digital Education Architecture,Ministry of Education,2021,All,NDEAR framework for interoperable digital education ecosystem,https://www.education.gov.in,Active,Digital education architecture
+FW-006,NCF Teacher Education 2009,NCTE,2009,All,Pre-service and in-service teacher education framework - being updated per NEP 2020,https://ncte.gov.in,Active,Being updated per NEP 2020
+FW-007,NEP 2020 Teacher Roadmap,Ministry of Education,2021,All,Teacher education and development roadmap as per NEP 2020,https://www.education.gov.in,Active,Action plan for teacher reform
+FW-008,CBSE Curriculum 2026-27 Classes IX-XII,CBSE,2026,Grade 9 to Grade 12,New NCF-SE 2023 aligned curriculum released by CBSE for Classes IX-XII for academic session 2026-27,https://cbseacademic.nic.in/curriculum_2027.html,Active,Class IX implements NCF-SE 2023 from 2026-27; Classes XI-XII released April 2026
+FW-009,NCERT New Textbooks Roadmap 2022-2027,NCERT,2026,Grade 1 to Grade 12,Phased rollout of new NCF-SE 2023 aligned textbooks - Classes 1-8 complete; Class 9 in 2026-27; Classes 10-11 in 2027-28,https://ncert.nic.in/list-publication.php?ln=en,Active,Advisory issued March 2026; Grade 9 draft available on NCERT website
+FW-010,NCF Curriculum for Preparatory Stage,NCERT,2023,Grade 3 to Grade 5,Curriculum framework for Preparatory Stage (Grades 3-5) aligned with NEP 2020,https://ncert.nic.in,Active,Aligned with NCF-SE 2023
+FW-011,NCF Curriculum for Middle Stage,NCERT,2023,Grade 6 to Grade 8,Curriculum framework for Middle Stage (Grades 6-8) aligned with NEP 2020 - textbooks released 2025-26,https://ncert.nic.in,Active,New textbooks for Grades 4 5 7 8 released March 2025
+FW-012,NCTE NCF Teacher Education Revised,NCTE,2025,All,Revised National Curriculum Framework for Teacher Education aligned with NEP 2020 and NCF-SE 2023,https://ncte.gov.in,Active,Updated from 2009 version to align with NEP 2020
