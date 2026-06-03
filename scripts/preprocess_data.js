@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const base = path.resolve(__dirname, '..')
 const input = path.join(base, 'data', 'master_repository.csv')
-const dist = path.join(base, 'dist')
+const dist = path.join(base, 'public')
 fs.mkdirSync(dist, { recursive: true })
 
 const parseCSV = (text) => {
