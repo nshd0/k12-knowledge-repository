@@ -1,0 +1,180 @@
+# sources_config.yaml - Web scraping targets for IOE EdTech K-12 Knowledge Collection
+# For EDUCATIONAL RESEARCH purposes only.
+# All sources are publicly accessible government / official academic portals.
+# Respects robots.txt and uses polite crawl delays (1.5s between requests).
+#
+# Schema per source:
+#   id            : unique snake_case identifier
+#   label         : human-readable source name
+#   base_url      : root domain for link resolution
+#   seed_urls     : starting pages for the crawler
+#   allow_pattern : regex — only URLs matching this are crawled
+#   content_type  : webpage | pdf_index | api
+#   grade_level   : target grade range (e.g. "6-8", "9-12", "all")
+#   subject       : primary subject domain or "general"
+#   language      : en | hi | mixed
+#   min_words     : skip pages with fewer than this many words (thin content)
+
+sources:
+
+  # -----------------------------------------------------------------------
+  # 1. NCERT - National Council of Educational Research and Training
+  # -----------------------------------------------------------------------
+  - id: ncert
+    label: "NCERT (ncert.nic.in)"
+    base_url: "https://ncert.nic.in"
+    seed_urls:
+      - "https://ncert.nic.in/textbook.php"
+      - "https://ncert.nic.in/exemplar-problems.php"
+      - "https://ncert.nic.in/curriculum-framework.php"
+      - "https://ncert.nic.in/ncf/index.php"
+      - "https://ncert.nic.in/syllabus.php"
+    allow_pattern: "^https://ncert\\.nic\\.in/.*"
+    content_type: webpage
+    grade_level: "1-12"
+    subject: general
+    language: en
+    min_words: 100
+    tags: [ncf, textbook, curriculum, syllabus]
+
+  # -----------------------------------------------------------------------
+  # 2. CBSE Academic - Curriculum, SOPs, Circulars
+  # -----------------------------------------------------------------------
+  - id: cbse
+    label: "CBSE Academic (cbseacademic.nic.in)"
+    base_url: "https://cbseacademic.nic.in"
+    seed_urls:
+      - "https://cbseacademic.nic.in/curriculum_2024.html"
+      - "https://cbseacademic.nic.in/web_material/CurriculumMain24/"
+      - "https://cbseacademic.nic.in/competency-based-education.html"
+      - "https://cbseacademic.nic.in/sop.html"
+      - "https://cbseacademic.nic.in/circulars.html"
+    allow_pattern: "^https://cbseacademic\\.nic\\.in/.*"
+    content_type: webpage
+    grade_level: "1-12"
+    subject: general
+    language: en
+    min_words: 80
+    tags: [curriculum, circular, competency, assessment]
+
+  # -----------------------------------------------------------------------
+  # 3. Ministry of Education / NEP 2020 / NCF 2023
+  # -----------------------------------------------------------------------
+  - id: moe
+    label: "Ministry of Education (education.gov.in)"
+    base_url: "https://www.education.gov.in"
+    seed_urls:
+      - "https://www.education.gov.in/nep/about-nep"
+      - "https://www.education.gov.in/sites/upload_files/mhrd/files/NEP_Final_English_0.pdf"
+      - "https://www.education.gov.in/school-education"
+      - "https://www.education.gov.in/initiatives"
+      - "https://www.education.gov.in/pm-shri"
+    allow_pattern: "^https://www\\.education\\.gov\\.in/.*"
+    content_type: webpage
+    grade_level: all
+    subject: policy
+    language: en
+    min_words: 150
+    tags: [nep2020, ncf2023, policy, school-education]
+
+  # -----------------------------------------------------------------------
+  # 4. DIKSHA - Digital Infrastructure for Knowledge Sharing
+  # -----------------------------------------------------------------------
+  - id: diksha
+    label: "DIKSHA (diksha.gov.in)"
+    base_url: "https://diksha.gov.in"
+    seed_urls:
+      - "https://diksha.gov.in/explore"
+      - "https://diksha.gov.in/explore-course"
+      - "https://diksha.gov.in/play/collection/do_31299530539402649614879"
+    allow_pattern: "^https://diksha\\.gov\\.in/(explore|play|learn).*"
+    content_type: webpage
+    grade_level: "6-10"
+    subject: general
+    language: mixed
+    min_words: 50
+    tags: [digital-content, lesson-plan, learning-resource]
+
+  # -----------------------------------------------------------------------
+  # 5. Directorate of Education Delhi - Circulars & Orders
+  # -----------------------------------------------------------------------
+  - id: doe_delhi
+    label: "DoE Delhi (edudel.nic.in)"
+    base_url: "https://www.edudel.nic.in"
+    seed_urls:
+      - "https://www.edudel.nic.in/welcome_folder/welcome.htm"
+      - "https://www.edudel.nic.in/mis/EdudelMis/SchoolPlant/school_detail_new.aspx"
+    allow_pattern: "^https://www\\.edudel\\.nic\\.in/.*"
+    content_type: webpage
+    grade_level: all
+    subject: administration
+    language: en
+    min_words: 60
+    tags: [circular, exam-schedule, delhi-school]
+
+  # -----------------------------------------------------------------------
+  # 6. NCTE - National Council for Teacher Education
+  # -----------------------------------------------------------------------
+  - id: ncte
+    label: "NCTE (ncte.gov.in)"
+    base_url: "https://ncte.gov.in"
+    seed_urls:
+      - "https://ncte.gov.in/website/norms_and_standards.aspx"
+      - "https://ncte.gov.in/website/regulations.aspx"
+      - "https://ncte.gov.in/website/teacher_education_curriculum.aspx"
+    allow_pattern: "^https://ncte\\.gov\\.in/.*"
+    content_type: webpage
+    grade_level: all
+    subject: teacher-education
+    language: en
+    min_words: 100
+    tags: [teacher-training, norms, regulation]
+
+  # -----------------------------------------------------------------------
+  # 7. Samagra Shiksha - Integrated School Education Scheme
+  # -----------------------------------------------------------------------
+  - id: samagra
+    label: "Samagra Shiksha (samagrashiksha.gov.in)"
+    base_url: "https://samagrashiksha.gov.in"
+    seed_urls:
+      - "https://samagrashiksha.gov.in/public/frontend/web/index.php"
+      - "https://samagrashiksha.gov.in/public/frontend/web/index.php/content/viewguide"
+    allow_pattern: "^https://samagrashiksha\\.gov\\.in/.*"
+    content_type: webpage
+    grade_level: all
+    subject: scheme
+    language: en
+    min_words: 80
+    tags: [samagra, elementary, secondary, scheme]
+
+  # -----------------------------------------------------------------------
+  # 8. NIOS - National Institute of Open Schooling
+  # -----------------------------------------------------------------------
+  - id: nios
+    label: "NIOS (nios.ac.in)"
+    base_url: "https://www.nios.ac.in"
+    seed_urls:
+      - "https://www.nios.ac.in/online-course-material/secondary-courses.aspx"
+      - "https://www.nios.ac.in/online-course-material/sr-secondary-courses.aspx"
+    allow_pattern: "^https://www\\.nios\\.ac\\.in/(online-course-material|media).*"
+    content_type: webpage
+    grade_level: "10-12"
+    subject: general
+    language: en
+    min_words: 100
+    tags: [open-school, distance-learning, course-material]
+
+# ---------------------------------------------------------------------------
+# Global scraper settings
+# ---------------------------------------------------------------------------
+global:
+  request_delay_seconds: 1.5
+  max_retries: 3
+  timeout_seconds: 20
+  respect_robots_txt: true
+  user_agent: "IOE-EdTech-Bot/1.0 (educational research; +https://github.com/nshd0/k12-knowledge-repository)"
+  output_dir: scraped/
+  index_file: scraped/index.jsonl
+  governance_status_default: pending_review
+  deduplicate: true
+  supported_languages: [en, hi, mixed]
