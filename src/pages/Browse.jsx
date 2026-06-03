@@ -9,8 +9,7 @@ export default function Browse() {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
-    fetch('/data-index.json').then(r => r.json()).then(setData).catch(() => {})
-  }, [])
+    fetch(`${import.meta.env.BASE_URL}data-index.json`).then(r => r.json()).then(setData).catch(() => {})  }, [])
 
   useEffect(() => {
     const catParam = searchParams.get('cat')
