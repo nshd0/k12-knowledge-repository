@@ -1,0 +1,185 @@
+# docker-compose.yaml - IOE EdTech Platform full open-source stack
+# Starts: Prefect (ingestion), ChromaDB (vector store), Retrieval API,
+#         LangGraph agents, OTel Collector, Prometheus, Jaeger, Grafana
+#
+# Usage:
+#   docker compose up -d
+#   docker compose logs -f retrieval
+
+version: '3.9'
+
+networks:
+  ioe_net:
+    driver: bridge
+
+volumes:
+  chroma_data:
+  prometheus_data:
+  grafana_data:
+
+services:
+
+  # ----------------------------------------------------------------
+  # Vector Store - ChromaDB (open source, local)
+  # ----------------------------------------------------------------
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8080:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks: [ioe_net]
+    environment:
+      ANONYMIZED_TELEMETRY: "False"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------------------
+  # Prefect Server - Ingestion Pipeline Orchestration
+  # ----------------------------------------------------------------
+  prefect-server:
+    image: prefecthq/prefect:2-latest
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+    networks: [ioe_net]
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # Prefect Worker - runs ingestion flows
+  prefect-worker:
+    image: prefecthq/prefect:2-latest
+    command: prefect worker start --pool k12-ingestion-pool --type process
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+    volumes:
+      - ./ingestion:/app/ingestion
+      - ./knowledge:/app/knowledge
+      - ./governance:/app/governance
+    working_dir: /app
+    networks: [ioe_net]
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SERVICE_NAME: prefect-ingestion
+      GITHUB_REPO: nshd0/k12-knowledge-repository
+
+  # ----------------------------------------------------------------
+  # Retrieval Service - FastAPI wrapper around ChromaDB
+  # ----------------------------------------------------------------
+  retrieval:
+    build:
+      context: .
+      dockerfile: retrieval/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      chromadb:
+        condition: service_healthy
+    volumes:
+      - ./retrieval:/app/retrieval
+    networks: [ioe_net]
+    environment:
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: 8000
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SERVICE_NAME: retrieval-service
+
+  # ----------------------------------------------------------------
+  # LangGraph Agent API - Student + Teacher agents
+  # ----------------------------------------------------------------
+  agents:
+    build:
+      context: .
+      dockerfile: agent/Dockerfile
+    ports:
+      - "8001:8001"
+    depends_on:
+      - retrieval
+    volumes:
+      - ./agent:/app/agent
+      - ./governance:/app/governance
+    networks: [ioe_net]
+    environment:
+      RETRIEVAL_URL: http://retrieval:8000
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SERVICE_NAME: langgraph-agents
+
+  # ----------------------------------------------------------------
+  # OpenTelemetry Collector
+  # ----------------------------------------------------------------
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-config.yaml"]
+    volumes:
+      - ./telemetry/otel_config.yaml:/etc/otel-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8888:8888"   # Collector metrics
+      - "8889:8889"   # Prometheus scrape endpoint
+    networks: [ioe_net]
+    depends_on:
+      - jaeger
+      - prometheus
+
+  # ----------------------------------------------------------------
+  # Jaeger - Distributed Tracing
+  # ----------------------------------------------------------------
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "14250:14250"  # gRPC receiver
+    networks: [ioe_net]
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+
+  # ----------------------------------------------------------------
+  # Prometheus - Metrics Storage
+  # ----------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks: [ioe_net]
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+
+  # ----------------------------------------------------------------
+  # Grafana - Dashboards
+  # ----------------------------------------------------------------
+  grafana:
+    image: grafana/grafana-oss:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./telemetry/dashboard:/etc/grafana/provisioning/dashboards
+    networks: [ioe_net]
+    depends_on:
+      - prometheus
+      - jaeger
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/ioe_edtech_dashboard.json
+
+# Quick start:
+#   1. docker compose up -d
+#   2. Grafana: http://localhost:3000  (admin/admin)
+#   3. Jaeger:  http://localhost:16686
+#   4. Prefect: http://localhost:4200
+#   5. ChromaDB: http://localhost:8080
