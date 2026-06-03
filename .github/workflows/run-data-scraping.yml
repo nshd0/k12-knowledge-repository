@@ -1,0 +1,68 @@
+name: Run Data Scraping
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Sundays at 2 AM IST (Saturday 8:30 PM UTC)
+    - cron: '30 20 * * 6'
+
+jobs:
+  scrape-educational-sources:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd scraper
+          pip install -r requirements.txt
+      
+      - name: Run orchestrator
+        run: |
+          cd scraper
+          python orchestrator.py
+        env:
+          PYTHONUNBUFFERED: 1
+      
+      - name: Validate scraped data
+        run: |
+          cd scraper
+          for file in data/*.json; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              python data_validator.py "$file" --output "validation_reports/$(basename "$file" .json)_validation.json"
+            fi
+          done
+        continue-on-error: true
+      
+      - name: Upload scraped data
+        uses: actions/upload-artifact@v3
+        with:
+          name: scraped-data-${{ github.run_number }}
+          path: |
+            scraper/data/
+            scraper/logs/
+      
+      - name: Upload validation reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-reports-${{ github.run_number }}
+          path: scraper/validation_reports/
+        if: always()
+      
+      - name: Commit and push scraped data
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add scraper/data/ scraper/logs/ scraper/validation_reports/ || true
+          git commit -m "chore: Update scraped data - Run #${{ github.run_number }}" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+        continue-on-error: true
