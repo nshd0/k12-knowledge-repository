@@ -22,26 +22,26 @@ jobs:
       
       - name: Install dependencies
         run: |
-          cd scraper
-          pip install -r requirements.txt
+                    cd scraper
+                    pip install -r requirements.txt
       
       - name: Run orchestrator
         run: |
-          cd scraper
-          python orchestrator.py
+                    cd scraper
+                    python orchestrator.py
         env:
                 PYTHONPATH: ${{ github.workspace }}
           PYTHONUNBUFFERED: 1
       
       - name: Validate scraped data
         run: |
-          cd scraper
-          for file in data/*.json; do
-            if [ -f "$file" ]; then
-              echo "Validating $file"
-              python data_validator.py "$file" --output "validation_reports/$(basename "$file" .json)_validation.json"
-            fi
-          done
+                    cd scraper
+                    for file in data/*.json; do
+                        if [ -f "$file" ]; then
+                            echo "Validating $file"
+                            python data_validator.py "$file" --output "validation_reports/$(basename "$file" .json)_validation.json"
+                        fi
+                    done
         continue-on-error: true
       
       - name: Upload scraped data
