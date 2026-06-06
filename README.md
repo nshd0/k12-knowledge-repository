@@ -14,6 +14,18 @@ Aligned with NEP 2020, NCF 2023, CBSE, and nationwide education frameworks
 
 [Explore Knowledge Base](#-explore-by-stakeholder) • [View Data Catalog](knowledge/metadata/catalog.csv) • [Technical Docs](#-for-developers) • [Contribute](#-contributing)
 
+## 🎓 Stakeholder Dashboards
+
+**[View Interactive Dashboards](https://htmlpreview.github.io/?https://raw.githubusercontent.com/nshd0/k12-knowledge-repository/refs/heads/main/telemetry/dashboard/stakeholder_dashboards.html)** - NEP 2020, NCF 2023 & CBSE aligned dashboards for:
+- 👔 Principal/School Leaders
+- 👨‍🏫 Teachers
+- 🎒 Students
+- 👨‍👩‍👧 Parents
+- 📋 Coordinators
+
+Each dashboard includes stage-wise pedagogy tracking (Foundational, Preparatory, Middle, Secondary) and compliance metrics.
+
+
 </div>
 
 ---
