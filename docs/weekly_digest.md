@@ -1,25 +1,21 @@
-# Weekly Digest — K-12 Knowledge Repository
+# Weekly Digest
 
-Last updated: June 2026
-
-## Repository counts
-- Frameworks: 7
-- Circulars: 8
+## Counts
+- Framework: 7
+- Circular: 8
 - Capacity Building: 8
 - Assessment: 8
 - Pedagogy: 8
-- Subject Resources: 12
-- Source Index: 12
+- Subject Resource: 12
 
-## Active sources to review this week
-- [ ] CBSE SARAS: https://saras.cbse.gov.in/saras/Home/Circulars
-- [ ] CBSE Student Circulars: https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html
-- [ ] Delhi DoE: https://www.edudel.nic.in
-- [ ] DIKSHA: https://diksha.gov.in
-
-## Active sources to review this month
-- [ ] Ministry of Education: https://www.education.gov.in
-- [ ] NCERT: https://ncert.nic.in
-- [ ] CBSE Academic: https://cbseacademic.nic.in
-- [ ] PARAKH: https://parakh.gov.in
-- [ ] NIPUN Bharat: https://nipunbharat.education.gov.in
+## Active Items
+- National Education Policy 2020 (Active)
+- NCF School Education 2023 (Active)
+- NCF Foundational Stage 2022 (Active)
+- National Assessment Framework (Active)
+- National Digital Education Architecture (Active)
+- National Curriculum Framework for Teacher Education 2009 (Active)
+- NEP 2020 Teacher Roadmap (Active)
+- CBSE Student Circulars (Active)
+- CBSE SARAS Circulars Portal (Active)
+- Delhi Directorate of Education Circulars (Active)
