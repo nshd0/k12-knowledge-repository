@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      issues: write     # needed for the coordinator alert issue
+      issues: write
 
     steps:
       - name: Checkout
@@ -31,21 +31,47 @@ jobs:
 
       # ── Step 1: Data refresh ──────────────────────────────────────────────
       - name: Run source ingestion
+        id: ingest
         run: python scripts/ingest_sources.py
 
       - name: Run document tagger
         run: python scripts/tag_documents.py
 
       - name: Generate weekly digest
+        id: digest
         run: python scripts/weekly_digest.py
 
-      # ── Step 2: NotebookLM packs ─────────────────────────────────────────
-      - name: Generate NotebookLM export packs
+      # ── Step 2: Check if there are actual changes ────────────────────────
+      # If no new/changed records, skip commit + alert entirely.
+      # This prevents empty bot commits that pollute git history.
+      - name: Detect real changes
+        id: changes
         run: |
-          python scripts/generate_notebooklm_packs.py
-          echo "NotebookLM packs regenerated."
+          git diff --name-only HEAD > /tmp/changed_files.txt
+          cat /tmp/changed_files.txt
+          if grep -qE '^data/' /tmp/changed_files.txt; then
+            echo "has_data_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_data_changes=false" >> $GITHUB_OUTPUT
+          fi
+          echo "changed_files=$(cat /tmp/changed_files.txt | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Skip notice (no changes)
+        if: steps.changes.outputs.has_data_changes == 'false'
+        run: |
+          echo "No data changes detected this week — skipping commit and coordinator alert."
+          echo "### Weekly Refresh — No Changes" >> $GITHUB_STEP_SUMMARY
+          echo "- All source data matches last week's state" >> $GITHUB_STEP_SUMMARY
+          echo "- No commit pushed, no NotebookLM packs regenerated" >> $GITHUB_STEP_SUMMARY
+          echo "- Next run: Monday" >> $GITHUB_STEP_SUMMARY
+
+      # ── Step 3: NotebookLM packs (only when data changed) ───────────────
+      - name: Generate NotebookLM export packs
+        if: steps.changes.outputs.has_data_changes == 'true'
+        run: python scripts/generate_notebooklm_packs.py
 
       - name: Capture pack manifest
+        if: steps.changes.outputs.has_data_changes == 'true'
         id: manifest
         run: |
           python - <<'PYEOF'
@@ -63,8 +89,9 @@ jobs:
                   f.write(f"generated={data['generated']}\n")
           PYEOF
 
-      # ── Step 3: Re-index ChromaDB (if CHROMA_PERSIST_PATH is set) ────────
+      # ── Step 4: Re-index ChromaDB ──────────────────────────────────────
       - name: Re-index knowledge base into ChromaDB
+        if: steps.changes.outputs.has_data_changes == 'true'
         run: |
           if [ -d "knowledge" ] && [ "$(find knowledge -name '*.md' | head -1)" ]; then
             pip install -q chromadb sentence-transformers python-frontmatter
@@ -72,10 +99,11 @@ jobs:
           else
             echo "No knowledge/ .md files yet — skipping ChromaDB index step."
           fi
-        continue-on-error: true   # don't block weekly refresh if Chroma fails
+        continue-on-error: true
 
-      # ── Step 4: Write update log ──────────────────────────────────────────
+      # ── Step 5: Write update log ──────────────────────────────────────────
       - name: Write update log entry
+        if: steps.changes.outputs.has_data_changes == 'true'
         run: |
           python - <<'PYEOF'
           from pathlib import Path
@@ -93,26 +121,29 @@ jobs:
                   lines.insert(i + 1, entry)
                   break
           log.write_text(''.join(lines), encoding='utf-8')
-          print(f'Log entry added for {today}')
           PYEOF
 
-      # ── Step 5: Commit ────────────────────────────────────────────────────
+      # ── Step 6: Commit (only when data changed, not a dry run) ──────────
       - name: Commit and push
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: >
+          steps.changes.outputs.has_data_changes == 'true' &&
+          github.event.inputs.dry_run != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/ docs/ exports/notebooklm/
-          git diff --cached --quiet && echo "Nothing to commit" || \
-            git commit -m "chore(data): Weekly automated refresh + NotebookLM packs [skip ci]" && git push
+          git diff --cached --quiet && echo "Nothing to stage" || \
+            git commit -m "chore(data): Weekly refresh — $(python -c "import json; s=json.load(open('docs/digest_state.json')); print(f\"{len(s['ids'])} records\")" 2>/dev/null || echo 'data updated') [skip ci]" && git push
 
       - name: Dry run notice
-        if: ${{ github.event.inputs.dry_run == 'true' }}
+        if: github.event.inputs.dry_run == 'true'
         run: echo "Dry run complete. No changes committed."
 
-      # ── Step 6: Coordinator alert issue ───────────────────────────────────
+      # ── Step 7: Coordinator alert issue (only when data changed) ───────
       - name: Post coordinator alert
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: >
+          steps.changes.outputs.has_data_changes == 'true' &&
+          github.event.inputs.dry_run != 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -120,7 +151,6 @@ jobs:
             const table = `${{ steps.manifest.outputs.pack_table }}`;
             const generated = `${{ steps.manifest.outputs.generated }}`;
 
-            // Close any open weekly-refresh alert issues from previous weeks
             const issues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -136,14 +166,13 @@ jobs:
               });
             }
 
-            // Open a fresh alert issue
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `[Weekly Refresh] NotebookLM packs ready — ${today}`,
               labels: ['weekly-refresh-alert'],
               body: [
-                '## ✅ Weekly data refresh complete',
+                '## ✅ Weekly data refresh complete — real changes detected',
                 '',
                 `**Date:** ${generated}`,
                 '',
@@ -161,17 +190,15 @@ jobs:
                 '5. Close this issue when all notebooks are updated ✓',
                 '',
                 '---',
-                '_This issue is auto-created by `weekly-update.yml`. Close it when upload is done._',
+                '_This issue is auto-created only when real data changes are detected._',
               ].join('\n'),
             });
-      
-      # ── Step 7: Summary ───────────────────────────────────────────────────
+
+      # ── Step 8: Job summary ───────────────────────────────────────────────
       - name: Summary
         if: always()
         run: |
           echo "### Weekly Refresh Complete" >> $GITHUB_STEP_SUMMARY
-          echo "- Ingest, tag, digest: done" >> $GITHUB_STEP_SUMMARY
-          echo "- NotebookLM packs: generated in exports/notebooklm/" >> $GITHUB_STEP_SUMMARY
-          echo "- ChromaDB re-index: attempted" >> $GITHUB_STEP_SUMMARY
-          echo "- Coordinator alert issue: posted" >> $GITHUB_STEP_SUMMARY
+          echo "- Data changes detected: ${{ steps.changes.outputs.has_data_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Changed files: ${{ steps.changes.outputs.changed_files }}" >> $GITHUB_STEP_SUMMARY
           echo "- Dry run: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY

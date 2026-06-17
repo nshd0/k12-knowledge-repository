@@ -1,10 +1,141 @@
-# ARCHIVED — URL health check merged into data-integrity.yml.
-# data-integrity.yml now runs on every push to data/ AND on the 1st of each
-# month via its own schedule trigger, covering both the per-commit CSV check
-# and the monthly source URL verification.
-#
-# The source_health.json output and docs/update_log.md entry are preserved
-# in the merged integrity workflow.
+name: Monthly — Content Audit Report
 
-# name: Monthly — Deep Source Review   ← disabled
-# on: ~
+# Runs on the 2nd of each month (day after data-integrity URL sweep)
+# and on manual dispatch. Produces a human-readable audit issue that
+# coordinators can work through and close.
+
+on:
+  schedule:
+    - cron: "0 6 2 * *"    # 2nd of month, 6am UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run - open issue but do not commit report file"
+        required: false
+        default: "false"
+
+jobs:
+  content-audit:
+    name: Audit → Report → Issue
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # ── Step 1: Run audit script ─────────────────────────────────────
+      - name: Run monthly audit
+        id: audit
+        run: python scripts/monthly_audit.py
+
+      # ── Step 2: Commit report ────────────────────────────────────────
+      - name: Commit audit report
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/monthly_audit_report.md
+          git diff --cached --quiet && echo "Report unchanged" || \
+            git commit -m "chore(docs): Monthly content audit report $(date +%Y-%m) [skip ci]" && git push
+
+      # ── Step 3: Open coordinator issue ──────────────────────────────
+      - name: Read audit summary
+        id: summary
+        run: |
+          python - <<'PYEOF'
+          import json, os
+          from pathlib import Path
+          report = Path('docs/monthly_audit_report.md')
+          if not report.exists():
+              print('No report found')
+              exit(0)
+          # Extract executive summary table lines
+          lines = report.read_text(encoding='utf-8').splitlines()
+          table_lines = []
+          in_table = False
+          for line in lines:
+              if '## Executive summary' in line:
+                  in_table = True
+                  continue
+              if in_table:
+                  if line.startswith('|'):
+                      table_lines.append(line)
+                  elif table_lines and not line.startswith('|'):
+                      break
+          table = '\n'.join(table_lines)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"exec_table<<EOF\n{table}\nEOF\n")
+          PYEOF
+
+      - name: Post monthly audit issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const today = new Date().toISOString().split('T')[0];
+            const month = today.slice(0, 7);
+            const table = `${{ steps.summary.outputs.exec_table }}`;
+
+            // Close previous monthly audit issues
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'monthly-audit',
+              state: 'open',
+            });
+            for (const issue of issues.data) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+              });
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Monthly Audit] Content quality review — ${month}`,
+              labels: ['monthly-audit'],
+              body: [
+                `## 🔍 Monthly content audit — ${month}`,
+                '',
+                'The automated audit has reviewed all records in `data/master_repository.csv`.',
+                'Full report: [`docs/monthly_audit_report.md`](../blob/main/docs/monthly_audit_report.md)',
+                '',
+                '### Issue summary',
+                '',
+                '| Issue type | Count | Action required |',
+                '|---|---|---|',
+                table,
+                '',
+                '### How to fix',
+                '',
+                '1. Open `data/master_repository.csv`',
+                '2. Find the flagged rows (IDs listed in the full report)',
+                '3. Fill missing fields / update Effective Date / remove archived entries',
+                '4. Open a PR — `data-integrity.yml` will validate your changes',
+                '5. Close this issue when all items are resolved',
+                '',
+                '---',
+                '_Auto-generated by `monthly-review.yml`. Close when actioned._',
+              ].join('\n'),
+            });
+
+      # ── Step 4: Summary ───────────────────────────────────────────────
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Monthly Audit Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- Report written to docs/monthly_audit_report.md" >> $GITHUB_STEP_SUMMARY
+          echo "- Coordinator issue opened with label 'monthly-audit'" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry run: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
