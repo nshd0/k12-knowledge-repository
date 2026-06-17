@@ -4,18 +4,35 @@
 # Vector store
 chromadb>=0.5.0
 
-# Embeddings (local, free, no API key)
+# ── Hugging Face core ─────────────────────────────────────────────────────────
+# Embeddings + cross-encoder reranking (local, free, no API key required)
 sentence-transformers>=3.0.0
 
+# Hugging Face Inference API client (serverless hosted models)
+huggingface_hub>=0.23.0
+
+# Full transformers stack (needed for local model loading)
+transformers>=4.41.0
+
+# PyTorch CPU — swap for torch+cu121 on GPU machines
+torch>=2.3.0
+
+# Tokenizer acceleration
+tokenizers>=0.19.0
+
+# ── Supporting libraries ──────────────────────────────────────────────────────
 # Markdown frontmatter parsing (for ingest.py)
 python-frontmatter>=1.1.0
 
 # LangGraph agent runtime
 langgraph>=0.2.0
 
-# LLM backends (install the one you need)
-# ollama>=0.2.0          # local LLM via Ollama
-# openai>=1.0.0          # OpenAI API
-
 # YAML
 pyyaml>=6.0
+
+# Date utilities (used by monthly audit)
+python-dateutil>=2.9.0
+
+# ── Optional backends (uncomment the one you need) ────────────────────────────
+# ollama>=0.2.0          # local LLM via Ollama
+# openai>=1.0.0          # OpenAI API

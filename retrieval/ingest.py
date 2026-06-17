@@ -12,8 +12,12 @@ Environment variables:
     CHROMA_PERSIST_PATH   Local directory for persistent Chroma DB (default: ./chroma_db)
     CHROMA_HOST           If set, uses HTTP client instead of local persistent mode
     CHROMA_PORT           HTTP port (default: 8000)
-    EMBEDDING_MODEL       sentence-transformers model (default: all-MiniLM-L6-v2)
-    EMBEDDING_BACKEND     sentence_transformers | stub (default: sentence_transformers)
+    EMBEDDING_MODEL       Model name (default: BAAI/bge-m3)
+    EMBEDDING_BACKEND     sentence_transformers | hf_api | stub
+                            sentence_transformers — loads model locally (default, free)
+                            hf_api               — calls HF Inference API (needs HF_TOKEN)
+                            stub                 — returns zero vectors (tests only)
+    HF_TOKEN              Required when EMBEDDING_BACKEND=hf_api
 """
 from __future__ import annotations
 
@@ -29,7 +33,8 @@ CHROMA_PERSIST_PATH = os.getenv("CHROMA_PERSIST_PATH", "./chroma_db")
 CHROMA_HOST = os.getenv("CHROMA_HOST", "")
 CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000"))
 EMBEDDING_BACKEND = os.getenv("EMBEDDING_BACKEND", "sentence_transformers")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
+HF_TOKEN = os.getenv("HF_TOKEN", "")
 COLLECTION_NAME = "ioe_k12"
 
 # Required frontmatter fields (from metadata/schema.yaml)
@@ -54,12 +59,37 @@ def get_chroma_collection():
 
 
 def embed(texts: List[str]) -> List[List[float]]:
-    """Embed a list of strings. Returns list of float vectors."""
+    """Embed a list of strings using the configured backend.
+
+    Backends:
+        sentence_transformers  — loads model locally via sentence-transformers (default)
+        hf_api                 — calls Hugging Face Inference API (needs HF_TOKEN)
+        stub                   — returns zero vectors for testing
+    """
     if EMBEDDING_BACKEND == "stub":
         return [[0.0] * 384 for _ in texts]
+
+    if EMBEDDING_BACKEND == "hf_api":
+        if not HF_TOKEN:
+            raise EnvironmentError(
+                "HF_TOKEN is required when EMBEDDING_BACKEND=hf_api. "
+                "Set it in .env or as a GitHub Secret."
+            )
+        from huggingface_hub import InferenceClient
+        client = InferenceClient(token=HF_TOKEN)
+        # HF feature-extraction endpoint returns a list of lists
+        vectors = []
+        for text in texts:
+            result = client.feature_extraction(text, model=EMBEDDING_MODEL)
+            # result may be a nested list — take the CLS vector (first row)
+            vec = result[0] if isinstance(result[0], list) else result
+            vectors.append(vec)
+        return vectors
+
+    # Default: sentence_transformers local
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(EMBEDDING_MODEL)
-    return model.encode(texts, show_progress_bar=False).tolist()
+    return model.encode(texts, show_progress_bar=True, normalize_embeddings=True).tolist()
 
 
 def load_document(path: Path) -> dict | None:
@@ -72,6 +102,10 @@ def load_document(path: Path) -> dict | None:
 
     meta = dict(post.metadata)
     content = post.content.strip()
+
+    # Skip README index files
+    if path.name == "README.md":
+        return None
 
     # Validate required fields
     missing = [f for f in REQUIRED_FIELDS if f not in meta or not meta[f]]
@@ -134,9 +168,14 @@ def ingest(root: Path, dry_run: bool = False) -> tuple[int, int, int]:
 
     if dry_run:
         print(f"[DRY RUN] Would index {len(docs)} documents, skip {skipped}.")
+        print(f"  Embedding backend : {EMBEDDING_BACKEND}")
+        print(f"  Embedding model   : {EMBEDDING_MODEL}")
         for d in docs:
             print(f"  + {d['doc_id']} — {d['metadata']['title']}")
         return len(docs), skipped, 0
+
+    print(f"Embedding backend : {EMBEDDING_BACKEND}")
+    print(f"Embedding model   : {EMBEDDING_MODEL}")
 
     # Embed and upsert
     collection = get_chroma_collection()
