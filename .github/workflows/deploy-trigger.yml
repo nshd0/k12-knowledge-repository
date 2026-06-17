@@ -1,36 +1,10 @@
-name: Netlify — Deploy Trigger
+# ARCHIVED — the Netlify deploy hook is replaced by GitHub Pages.
+# pages-deploy.yml deploys index.html on every push to main with no
+# external service, no secret required, and no Netlify account dependency.
+#
+# If Netlify is re-adopted as the hosting platform:
+#   1. Add NETLIFY_DEPLOY_HOOK secret in repo settings
+#   2. Restore the job below and delete pages-deploy.yml
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - "data/**"
-      - "src/**"
-      - "scripts/**"
-      - "netlify.toml"
-      - "package.json"
-      - "index.html"
-  workflow_dispatch:
-
-jobs:
-  trigger-deploy:
-    name: Trigger Netlify Rebuild
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Trigger Netlify deploy hook
-        run: |
-          if [ -z "$NETLIFY_DEPLOY_HOOK" ]; then
-            echo "NETLIFY_DEPLOY_HOOK secret not set."
-            echo "Add it at: GitHub Repo Settings -> Secrets -> Actions"
-            echo "Get URL from: Netlify -> Site Settings -> Build & Deploy -> Build hooks"
-          else
-            curl -s -X POST "$NETLIFY_DEPLOY_HOOK"
-            echo "Netlify deploy triggered."
-          fi
-        env:
-          NETLIFY_DEPLOY_HOOK: ${{ secrets.NETLIFY_DEPLOY_HOOK }}
-
-      - name: Summary
-        run: echo "### Netlify Deploy Trigger ran" >> $GITHUB_STEP_SUMMARY
+# name: Netlify — Deploy Trigger   ← disabled
+# on: ~

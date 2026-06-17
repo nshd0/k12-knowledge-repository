@@ -1,4 +1,7 @@
-name: Data Integrity Check
+name: Integrity — CSV + Source Health
+
+# Runs on every push/PR that touches data/, and on the 1st of each month
+# for a full URL health sweep. Absorbs the old monthly-review.yml.
 
 on:
   push:
@@ -7,11 +10,14 @@ on:
   pull_request:
     paths:
       - "data/**"
+  schedule:
+    - cron: "0 4 1 * *"   # 1st of month, 4am UTC — monthly URL health sweep
   workflow_dispatch:
 
 jobs:
-  integrity:
-    name: Validate All CSV Files
+  # ── JOB 1: CSV schema + value validation ──────────────────────────────────
+  csv-integrity:
+    name: Validate CSV Files
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,7 +30,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run integrity checks
+      - name: Run CSV integrity checks
         run: |
           python - <<'PYEOF'
           import csv, sys
@@ -36,13 +42,13 @@ jobs:
 
           REQUIRED_COLS = {
               'master_repository.csv': ['ID','Category','Title','Status','Link'],
-              'frameworks.csv': ['ID','Title','Issuing Authority','Year','Status'],
-              'circulars.csv': ['ID','Title','Issuing Authority','Status'],
+              'frameworks.csv':        ['ID','Title','Issuing Authority','Year','Status'],
+              'circulars.csv':         ['ID','Title','Issuing Authority','Status'],
               'capacity_building.csv': ['ID','Title','Provider','Status'],
-              'assessment.csv': ['ID','Title','Issuing Authority','Status'],
-              'pedagogy.csv': ['ID','Title','Issuing Authority','Status'],
+              'assessment.csv':        ['ID','Title','Issuing Authority','Status'],
+              'pedagogy.csv':          ['ID','Title','Issuing Authority','Status'],
               'subject_resources.csv': ['ID','Title','Subject','Status'],
-              'source_index.csv': ['ID','Source Name','URL'],
+              'source_index.csv':      ['ID','Source Name','URL'],
           }
           VALID_STATUSES = {'Active','Archived','Superseded','Pending Review'}
 
@@ -69,5 +75,106 @@ jobs:
               for e in errors: print(f'  ERROR: {e}')
               sys.exit(1)
           else:
-              print('All integrity checks passed.')
+              print('All CSV integrity checks passed.')
           PYEOF
+
+  # ── JOB 2: Source URL health check (monthly schedule + manual only) ────────
+  url-health:
+    name: Source URL Health Check
+    runs-on: ubuntu-latest
+    # Only run on schedule or manual dispatch — not on every data/ push
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Verify source URLs
+        run: |
+          python - <<'PYEOF'
+          import csv, json, sys
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import requests
+
+          sources = list(csv.DictReader(Path('data/source_index.csv').open(encoding='utf-8')))
+          report = []
+          for s in sources:
+              url = s.get('URL', '').strip()
+              name = s.get('Source Name', '')
+              if not url:
+                  continue
+              try:
+                  r = requests.head(url, timeout=12, allow_redirects=True,
+                                    headers={'User-Agent': 'K12-Repo-Bot/1.0'})
+                  ok = r.status_code < 400
+                  status = r.status_code
+              except Exception as e:
+                  status = f'ERROR: {e}'
+                  ok = False
+              icon = 'OK' if ok else 'FAIL'
+              report.append({'source': name, 'url': url, 'status': str(status), 'result': icon})
+              print(f'[{icon}] {name} -> {status}')
+
+          Path('docs/source_health.json').write_text(
+              json.dumps({'checked': datetime.now(timezone.utc).isoformat(), 'results': report}, indent=2),
+              encoding='utf-8'
+          )
+          failed = [r for r in report if r['result'] == 'FAIL']
+          print(f'Total: {len(report)} | OK: {len(report)-len(failed)} | Failed: {len(failed)}')
+          if failed:
+              print('Failed sources:')
+              for f in failed: print(f'  {f["source"]} — {f["url"]}')
+          PYEOF
+
+      - name: Write monthly log entry
+        run: |
+          python - <<'PYEOF'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          log = Path('docs/update_log.md')
+          if not log.exists():
+              print('update_log.md not found, skipping log entry')
+              exit(0)
+          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+          entry = f'| {today} | github-actions[bot] | Monthly source health check | docs/source_health.json |\n'
+          lines = log.read_text(encoding='utf-8').splitlines(keepends=True)
+          for i, line in enumerate(lines):
+              if line.startswith('|---'):
+                  lines.insert(i + 1, entry)
+                  break
+          log.write_text(''.join(lines), encoding='utf-8')
+          PYEOF
+
+      - name: Commit health report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --cached --quiet && echo "Nothing to commit" || \
+            git commit -m "chore(docs): Monthly source health report [skip ci]" && git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Integrity Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- CSV validation: completed" >> $GITHUB_STEP_SUMMARY
+          if [ -f docs/source_health.json ]; then
+            python - <<'PYEOF'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('docs/source_health.json').read_text())
+          ok = sum(1 for r in data['results'] if r['result'] == 'OK')
+          fail = sum(1 for r in data['results'] if r['result'] == 'FAIL')
+          print(f'- URL health: {len(data["results"])} sources | {ok} OK | {fail} failed')
+          PYEOF
+          fi

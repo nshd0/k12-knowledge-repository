@@ -1,69 +1,13 @@
-name: Run Data Scraping
+# ARCHIVED — scraper/orchestrator.py is now called inside weekly-update.yml
+# (step: "Run source ingestion" → python scripts/ingest_sources.py)
+# The scraper/data_validator.py validation is also covered by data-integrity.yml.
+#
+# The separate Sunday-at-8:30pm-UTC cron created a second concurrent weekly run
+# that raced with the Monday-3:30am-UTC run in weekly-update.yml.
+# Both ran the same scripts on the same data directory with no coordination.
+#
+# If you need to re-run the scraper in isolation:
+#   Actions → Weekly — Repository Data Refresh → Run workflow (dry_run=false)
 
-on:
-  workflow_dispatch:
-  schedule:
-    # Run weekly on Sundays at 2 AM IST (Saturday 8:30 PM UTC)
-    - cron: '30 20 * * 6'
-
-jobs:
-  scrape-educational-sources:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-      
-      - name: Install dependencies
-        run: |
-                    cd scraper
-                    pip install -r requirements.txt
-      
-      - name: Run orchestrator
-        run: |
-                    cd scraper
-                    python orchestrator.py
-        env:
-                PYTHONPATH: ${{ github.workspace }}
-          PYTHONUNBUFFERED: 1
-      
-      - name: Validate scraped data
-        run: |
-                    cd scraper
-                    for file in data/*.json; do
-                        if [ -f "$file" ]; then
-                            echo "Validating $file"
-                            python data_validator.py "$file" --output "validation_reports/$(basename "$file" .json)_validation.json"
-                        fi
-                    done
-        continue-on-error: true
-      
-      - name: Upload scraped data
-        uses: actions/upload-artifact@v4
-        with:
-          name: scraped-data-${{ github.run_number }}
-          path: |
-            scraper/data/
-            scraper/logs/
-      
-      - name: Upload validation reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: validation-reports-${{ github.run_number }}
-          path: scraper/validation_reports/
-        if: always()
-      
-      - name: Commit and push scraped data
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add scraper/data/ scraper/logs/ scraper/validation_reports/ || true
-          git commit -m "chore: Update scraped data - Run #${{ github.run_number }}" || echo "No changes to commit"
-          git push || echo "Nothing to push"
-        continue-on-error: true
+# name: Run Data Scraping   ← disabled
+# on: ~

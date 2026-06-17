@@ -1,30 +1,10 @@
-name: Scheduled Repository Update
+# ARCHIVED — superseded by weekly-update.yml
+# This workflow was an earlier, weaker version of the weekly scrape+commit job.
+# weekly-update.yml runs the same scripts with dry_run support, a proper commit
+# guard, and an update_log entry. Do not re-enable this file.
+#
+# To trigger a manual refresh use:
+#   Actions → Weekly — Repository Data Refresh → Run workflow
 
-on:
-  schedule:
-    - cron: "0 3 * * 1"
-  workflow_dispatch:
-
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-      - name: Run ingest
-        run: python scripts/ingest_sources.py
-      - name: Tag documents
-        run: python scripts/tag_documents.py
-      - name: Generate weekly digest
-        run: python scripts/weekly_digest.py
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Automated repository update" || exit 0
-          git push
+# name: Scheduled Repository Update   ← disabled
+# on: ~

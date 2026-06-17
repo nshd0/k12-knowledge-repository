@@ -1,73 +1,11 @@
-name: CI — Build & Validate
+# ARCHIVED — the Vite/Netlify build is no longer the primary deploy path.
+# GitHub Pages (pages-deploy.yml) now serves index.html directly as a
+# static site without a build step, making this CI job unnecessary.
+#
+# If the Vite/React app in /src/ is revived as the primary frontend,
+# restore this workflow and update pages-deploy.yml to point at dist/ instead.
+#
+# The CSV validation step from this file has been absorbed into data-integrity.yml.
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  build:
-    name: Install, Preprocess & Build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run data preprocessing
-        run: node scripts/preprocess_data.js
-
-      - name: Vite production build
-        run: npx vite build
-        env:
-          VITE_API_BASE: /.netlify/functions
-
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-${{ github.sha }}
-          path: dist
-          retention-days: 7
-
-  validate-data:
-    name: Validate CSV Data Files
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Check master_repository.csv
-        run: |
-          python - <<'PYEOF'
-          import csv, sys
-          from pathlib import Path
-          f = Path('data/master_repository.csv')
-          if not f.exists():
-              print('ERROR: master_repository.csv not found'); sys.exit(1)
-          rows = list(csv.DictReader(f.open(encoding='utf-8')))
-          if not rows:
-              print('ERROR: master_repository.csv is empty'); sys.exit(1)
-          required = ['ID','Category','Title','Status','Link']
-          missing = [c for c in required if c not in rows[0]]
-          if missing:
-              print(f'ERROR: Missing columns: {missing}'); sys.exit(1)
-          print(f'OK: {len(rows)} records, all required columns present')
-          PYEOF
+# name: CI — Build & Validate   ← disabled
+# on: ~

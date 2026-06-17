@@ -1,95 +1,10 @@
-name: Monthly — Deep Source Review
+# ARCHIVED — URL health check merged into data-integrity.yml.
+# data-integrity.yml now runs on every push to data/ AND on the 1st of each
+# month via its own schedule trigger, covering both the per-commit CSV check
+# and the monthly source URL verification.
+#
+# The source_health.json output and docs/update_log.md entry are preserved
+# in the merged integrity workflow.
 
-on:
-  schedule:
-    - cron: "0 4 1 * *"
-  workflow_dispatch:
-
-jobs:
-  monthly-review:
-    name: Source URL Verification
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install requests
-        run: pip install requests
-
-      - name: Verify source URLs
-        run: |
-          python - <<'PYEOF'
-          import csv, json, sys
-          from pathlib import Path
-          from datetime import datetime, timezone
-          import requests
-
-          sources = list(csv.DictReader(Path('data/source_index.csv').open(encoding='utf-8')))
-          report = []
-          for s in sources:
-              url = s.get('URL', '').strip()
-              name = s.get('Source Name', '')
-              if not url:
-                  continue
-              try:
-                  r = requests.head(url, timeout=12, allow_redirects=True,
-                                    headers={'User-Agent': 'K12-Repo-Bot/1.0'})
-                  status = r.status_code
-                  ok = status < 400
-              except Exception as e:
-                  status = f'ERROR: {e}'
-                  ok = False
-              icon = 'OK' if ok else 'FAIL'
-              report.append({'source': name, 'url': url, 'status': str(status), 'result': icon})
-              print(f'[{icon}] {name} -> {status}')
-
-          Path('docs/source_health.json').write_text(
-              json.dumps({'checked': datetime.now(timezone.utc).isoformat(), 'results': report}, indent=2),
-              encoding='utf-8'
-          )
-          failed = [r for r in report if r['result'] == 'FAIL']
-          print(f'\nTotal: {len(report)} | OK: {len(report)-len(failed)} | Failed: {len(failed)}')
-          PYEOF
-
-      - name: Write monthly log entry
-        run: |
-          python - <<'PYEOF'
-          from pathlib import Path
-          from datetime import datetime, timezone
-          log = Path('docs/update_log.md')
-          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-          entry = f'| {today} | github-actions[bot] | Monthly source health check | docs/source_health.json |\n'
-          lines = log.read_text(encoding='utf-8').splitlines(keepends=True)
-          for i, line in enumerate(lines):
-              if line.startswith('|---'):
-                  lines.insert(i + 1, entry)
-                  break
-          log.write_text(''.join(lines), encoding='utf-8')
-          PYEOF
-
-      - name: Commit health report
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git diff --cached --quiet && echo "Nothing to commit" || git commit -m "chore(docs): Monthly source health report [skip ci]"
-          git push
-
-      - name: Summary
-        run: |
-          echo "### Monthly Source Review" >> $GITHUB_STEP_SUMMARY
-          python - <<'PYEOF'
-          import json
-          from pathlib import Path
-          data = json.loads(Path('docs/source_health.json').read_text())
-          ok = sum(1 for r in data['results'] if r['result'] == 'OK')
-          fail = sum(1 for r in data['results'] if r['result'] == 'FAIL')
-          print(f'Sources checked: {len(data["results"])} | OK: {ok} | Failed: {fail}')
-          PYEOF
+# name: Monthly — Deep Source Review   ← disabled
+# on: ~
