@@ -144,7 +144,7 @@ jobs:
         if: >
           steps.changes.outputs.has_data_changes == 'true' &&
           github.event.inputs.dry_run != 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const today = new Date().toISOString().split('T')[0];
