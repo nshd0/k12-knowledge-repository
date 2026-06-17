@@ -1,34 +1,90 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="K-12 Knowledge Repository — official curriculum, circulars, capacity building and pedagogy resources for Indian schools" />
-    <title>K-12 Knowledge Repository</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-            <div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
-            <a href="/k12-knowledge-repository/telemetry/dashboard/stakeholder_dashboards.html" 
-               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                      color: white; 
-                      padding: 15px 30px; 
-                      border-radius: 10px; 
-                      text-decoration: none; 
-                      font-family: 'Segoe UI', sans-serif; 
-                      font-weight: 600; 
-                      font-size: 16px; 
-                      box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
-                      display: inline-block; 
-                      transition: transform 0.3s;" 
-               onmouseover="this.style.transform='translateY(-3px)'" 
-               onmouseout="this.style.transform='translateY(0)'">
-                🎓 Stakeholder Dashboards
-            </a>
-        </div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K12 Knowledge Hub — Source-of-Truth Layer for AI Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300..700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root,[data-theme='light']{
+  --bg:#f7f6f2;--surface:#fbfaf7;--surface-2:#f2efe9;--text:#26231d;--muted:#6f6d67;--faint:#aca8a0;--border:#ddd8cf;--primary:#0c6b73;--primary-2:#d9eceb;--success:#4a7c2b;--warning:#9a551d;--purple:#7a3ec8;--blue:#2f6fb4;--gold:#bb8c1a;--danger:#a13c69;--shadow:0 8px 24px rgba(0,0,0,.06);--shadow2:0 16px 40px rgba(0,0,0,.1);--radius:18px;--radius2:14px;--max:1180px;--font-body:'DM Sans',system-ui,sans-serif;--font-display:'DM Serif Display',Georgia,serif}
+[data-theme='dark']{--bg:#171614;--surface:#1d1c1a;--surface-2:#232220;--text:#e2e0db;--muted:#a19e97;--faint:#706d67;--border:#2f2c28;--primary:#5bb7bf;--primary-2:#253537;--success:#7bb24d;--warning:#d3884b;--purple:#b08bff;--blue:#78a8e0;--gold:#e0b84a;--danger:#df7ca8;--shadow:0 8px 24px rgba(0,0,0,.25);--shadow2:0 16px 40px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}img,svg{max-width:100%;display:block}button{font:inherit}
+.container{max-width:var(--max);margin:0 auto;padding:0 24px}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid color-mix(in srgb,var(--border) 88%,transparent)}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:38px;height:38px;border-radius:12px;background:var(--primary);display:grid;place-items:center;color:white;box-shadow:var(--shadow)}
+.brand h1{font-family:var(--font-display);font-size:1.1rem;margin:0}.brand p{margin:0;font-size:.82rem;color:var(--muted)}
+.nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end;font-size:.92rem;color:var(--muted)}
+.nav a:hover{color:var(--text)}.toggle{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;width:42px;height:42px;display:grid;place-items:center;cursor:pointer}
+.hero{padding:72px 0 36px}.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;background:var(--primary-2);color:var(--primary);font-size:.82rem;font-weight:700;letter-spacing:.02em}
+.hero h2{font-family:var(--font-display);font-size:clamp(2.2rem,4vw,4.6rem);line-height:1.03;margin:16px 0 14px}.hero p{font-size:1.05rem;color:var(--muted);max-width:62ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.btn{padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-weight:700}.btn.primary{background:var(--primary);color:white;border-color:transparent}.btn:hover{box-shadow:var(--shadow)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;border-radius:14px;background:var(--surface-2)}.stat b{display:block;font-size:1.4rem;font-family:var(--font-display)}.stat span{font-size:.82rem;color:var(--muted)}
+.section{padding:26px 0 0}.section h3{font-family:var(--font-display);font-size:clamp(1.5rem,2.2vw,2.3rem);margin:0 0 10px}.section .sub{color:var(--muted);max-width:72ch;margin:0 0 18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}.card h4{margin:0 0 8px;font-size:1.05rem}.card p,.card li{color:var(--muted);font-size:.96rem}.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:700;margin:0 8px 8px 0}
+.p-green{background:#dfead7;color:var(--success)}.p-blue{background:#dbe8f5;color:var(--blue)}.p-gold{background:#efe1ba;color:#947000}.p-purple{background:#e2d8f6;color:var(--purple)}.p-red{background:#edd5e0;color:var(--danger)}.p-teal{background:#d9eceb;color:var(--primary)}
+.timeline{display:grid;gap:14px}.step{display:flex;gap:14px;align-items:flex-start}.num{width:34px;height:34px;border-radius:999px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 auto}.step h5{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted)}
+.table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:16px}.table th,.table td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;font-size:.94rem}.table th{font-size:.77rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:var(--surface-2)}
+.code{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;overflow:auto;font-family:ui-monospace,SFMono-Regular,monospace;font-size:.84rem;color:var(--text)}
+.footer{padding:34px 0 56px;color:var(--muted);font-size:.92rem}
+hr{border:none;border-top:1px solid var(--border);margin:24px 0}
+@media(max-width:900px){.hero-grid,.grid-3,.grid-2,.stat-row{grid-template-columns:1fr}.nav{display:none}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container topbar-inner"><div class="brand"><div class="mark"><i data-lucide="brain-circuit"></i></div><div><h1>K12 Knowledge Hub</h1><p>Source-of-truth layer for AI agents</p></div></div><nav class="nav"><a href="#why">Why this works</a><a href="#structure">Structure</a><a href="#agents">Agent model</a><a href="#taxonomy">Folder taxonomy</a><a href="#governance">Governance</a></nav><button class="toggle" id="themeBtn" aria-label="Toggle theme"><i data-lucide="sun-moon"></i></button></div></header>
+<main>
+<section class="hero"><div class="container hero-grid"><div><span class="kicker"><i data-lucide="sparkles"></i> Governed institutional knowledge layer</span><h2>One trusted context base for every K–12 stakeholder and every AI agent.</h2><p>A source-of-truth layer that powers role-specific assistance for students, teachers, administrators, and parents while keeping all responses grounded in the same approved source material.</p><div class="actions"><a class="btn primary" href="#structure">View structure</a><a class="btn" href="#taxonomy">See folder taxonomy</a></div></div><div class="panel"><div class="stat-row"><div class="stat"><b>1</b><span>trusted knowledge base</span></div><div class="stat"><b>4</b><span>stakeholder views</span></div><div class="stat"><b>0</b><span>duplicated logic</span></div></div><hr><div class="card" style="box-shadow:none;padding:0;border:none"><h4>Core message</h4><p>The repository is not just storage. It is a governed retrieval layer that lets AI agents deliver consistent, context-aware answers without drifting across versions or teams.</p></div></div></div></section>
+<section id="why" class="section"><div class="container"><h3>Why this framing works</h3><p class="sub">A shared knowledge layer is a natural fit for K–12 AI systems because schools need role-specific assistance built on consistent institutional context for lesson planning, communication, compliance, and operational guidance.</p><div class="grid-3"><div class="card"><h4>Consistency</h4><p>All agents retrieve from the same approved sources, reducing answer drift and policy conflicts across the school.</p></div><div class="card"><h4>Ownership</h4><p>The school or organisation controls the canon, the update cycle, and the allowed source set — not the AI vendor.</p></div><div class="card"><h4>Usability</h4><p>Teachers, principals, parents, and students each see a tailored experience without fragmenting the underlying truth.</p></div></div></div></section>
+<section id="structure" class="section"><div class="container"><h3>Recommended product structure</h3><p class="sub">One master repository plus stakeholder-specific notebooks or views. GitHub as system of record. NotebookLM as the interaction layer.</p><div class="grid-2"><div class="card"><h4>Master repository</h4><p>Contains governed source files, summaries, update logs, compliance rules, and exports that feed all downstream experiences.</p><div><span class="pill p-teal">master_repository.csv</span><span class="pill p-teal">source_index.csv</span><span class="pill p-teal">compliance.md</span></div></div><div class="card"><h4>Stakeholder notebooks</h4><p>Separate experiences for principals, teachers, students, parents, and coordinators, each limited to relevant sources and prompts.</p><div><span class="pill p-blue">Principal</span><span class="pill p-green">Teacher</span><span class="pill p-gold">Student</span><span class="pill p-purple">Parent</span></div></div></div></div></section>
+<section id="agents" class="section"><div class="container"><h3>Agent architecture</h3><p class="sub">A governed retrieval pipeline rather than a free-form chatbot. The agent reads from canonical content, respects content boundaries, and surfaces citations for every claim.</p><div class="panel"><div class="timeline"><div class="step"><div class="num">1</div><div><h5>Ingest</h5><p>Approved documents are exported from GitHub into clean, source-tagged files on a weekly cadence via GitHub Actions.</p></div></div><div class="step"><div class="num">2</div><div><h5>Index</h5><p>Metadata — stakeholder, grade band, topic, source, effective date, and content owner — improves retrieval quality and agent accuracy.</p></div></div><div class="step"><div class="num">3</div><div><h5>Answer</h5><p>The agent composes responses from the same canonical source set for every stakeholder experience, keeping answers consistent.</p></div></div><div class="step"><div class="num">4</div><div><h5>Audit</h5><p>Versioning, update logs, and attribution headers preserve full transparency for editors, reviewers, and compliance checks.</p></div></div></div></div></section>
+<section id="taxonomy" class="section"><div class="container"><h3>Folder taxonomy</h3><p class="sub">A clean folder structure helps agents retrieve the right content with less ambiguity and keeps maintenance simple for contributors.</p><div class="code">/k12-knowledge-repository
+  /data
+    /curriculum        ← learning outcomes, scope, subject resources
+    /policy            ← NEP 2020, NCF-SE 2023, circulars
+    /assessment        ← competency guidelines, rubrics
+    /communication     ← parent notices, announcements
+  /docs
+    compliance.md
+    attribution-guide.md
+    update-log.md
+  /exports
+    notebooklm/        ← weekly sanitised exports for upload
+    stakeholder-packs/ ← per-audience bundles
+  /agent
+    prompts/           ← prompt templates per stakeholder
+    notebook-profiles/ ← source lists per notebook
+  /sources
+    official-links/    ← ncert.nic.in, education.gov.in refs
+    citations/         ← bibtex / attribution records
+  /.github/workflows
+    weekly-update.yml
+    pages-deploy.yml</div><div class="grid-3" style="margin-top:16px"><div class="card"><h4>Curriculum domain</h4><p>Learning outcomes, scope and sequence, pedagogy guides, and subject resources organised by grade band.</p></div><div class="card"><h4>Policy domain</h4><p>NEP 2020 summaries, NCF-SE 2023 key points, CBSE circulars, official guidelines, and compliance notes.</p></div><div class="card"><h4>Communication domain</h4><p>Parent notices, school calendar updates, announcements, and simplified stakeholder-facing summaries.</p></div></div></div></section>
+<section id="governance" class="section"><div class="container"><h3>Governance and attribution</h3><p class="sub">The knowledge layer stays trustworthy only if every file carries explicit origin, ownership, and licence information.</p><div class="grid-2"><div class="card"><h4>Required metadata fields</h4><ul style="padding-left:18px"><li>Stakeholder</li><li>Grade band</li><li>Topic</li><li>Source</li><li>Effective date</li><li>Content owner</li><li>License</li></ul></div><div class="card"><h4>Attribution header template</h4><div class="code">---
+Source: NCERT / NCF-SE 2023
+Source: NEP 2020, MoHRD
+License: CC BY-SA 4.0
+Notice: Original summaries and framework
+notes only. Does not reproduce NCERT
+textbook or workbook text.
+Maintained: nshd0/k12-knowledge-repository
+---</div></div></div></div></section>
+<section class="section"><div class="container"><h3>Positioning statement</h3><div class="card"><p><strong>A governed institutional knowledge layer that AI agents use to deliver stakeholder-specific support while staying grounded in the same approved source material.</strong></p><p style="margin-top:12px">That framing makes the repository feel like infrastructure, not just storage, and communicates retrieval, consistency, ownership, and agent readiness in a single line.</p></div></div></section>
+<div style="height:32px"></div>
+</main>
+<div class="container footer">K12 Knowledge Hub · <a href="https://github.com/nshd0/k12-knowledge-repository" style="color:var(--primary)">github.com/nshd0/k12-knowledge-repository</a> · CC BY-SA 4.0</div>
+<script>
+lucide.createIcons();
+const btn=document.getElementById('themeBtn');
+const root=document.documentElement;
+btn.addEventListener('click',()=>root.dataset.theme=root.dataset.theme==='dark'?'light':'dark');
+</script>
+</body>
 </html>
