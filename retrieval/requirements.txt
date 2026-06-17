@@ -1,0 +1,21 @@
+# retrieval/requirements.txt
+# Install with: pip install -r retrieval/requirements.txt
+
+# Vector store
+chromadb>=0.5.0
+
+# Embeddings (local, free, no API key)
+sentence-transformers>=3.0.0
+
+# Markdown frontmatter parsing (for ingest.py)
+python-frontmatter>=1.1.0
+
+# LangGraph agent runtime
+langgraph>=0.2.0
+
+# LLM backends (install the one you need)
+# ollama>=0.2.0          # local LLM via Ollama
+# openai>=1.0.0          # OpenAI API
+
+# YAML
+pyyaml>=6.0
