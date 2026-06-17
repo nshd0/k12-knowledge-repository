@@ -92,6 +92,7 @@ knowledge/
 ### Frontmatter template
 
 Every file must begin with this frontmatter block. All fields are required.
+See [`metadata/schema.yaml`](metadata/schema.yaml) for allowed values.
 
 ```yaml
 ---
@@ -128,6 +129,7 @@ license: CC BY-SA 4.0
 3. Open a PR targeting `main`
 4. The `pr-review.yml` workflow will automatically:
    - Validate all CSV columns and values
+   - Validate frontmatter fields in any changed `knowledge/` files against `metadata/schema.yaml`
    - Run a Vite build check
    - Post a reviewer checklist comment on your PR
 5. A maintainer will review and merge when all checklist items are ticked
@@ -155,8 +157,39 @@ Once your PR merges to `main`:
 > ⛔ Do not add personal data, student names, or school-identifying information  
 > ⛔ Do not add legal interpretations — link to the official document instead  
 > ⛔ Do not merge a PR that fails `data-integrity.yml`  
+> ⛔ Do not add a `knowledge/` file without all required frontmatter fields  
+> ⛔ Do not set `review_status: approved` on a file you authored — a second reviewer must approve  
 
 For questions about eligibility, open a GitHub Issue with the label `governance`.
+
+---
+
+## What belongs where — quick reference
+
+| Content type | Goes in |
+|---|---|
+| Official source URL | `data/source_index.csv` |
+| Structured data record | `data/master_repository.csv` + domain CSV |
+| Human-readable summary | `knowledge/<domain>/` |
+| Schema and validation rules | `metadata/schema.yaml` |
+| Automation scripts | `scripts/` |
+| AI agent prompts | `agent/` |
+| Ingestion pipeline code | `ingestion/` or `retrieval/` |
+| Generated export bundles | `exports/` (auto-generated — do not edit) |
+| Audit reports | `docs/` (auto-generated — do not edit) |
+
+---
+
+## Review cadence — what gets reviewed when
+
+| Cycle | What is checked | Triggered by |
+|---|---|---|
+| On every PR | CSV column completeness, frontmatter fields, Vite build | `pr-review.yml` |
+| Weekly (Monday) | Export freshness, RAG index rebuild | `weekly-update.yml` |
+| Monthly (2nd of month) | Stale effective dates, missing fields, orphaned entries | `monthly-review.yml` |
+| Quarterly (manual) | Archive superseded items, consolidate duplicates | Maintainer |
+
+**Stale content rule:** Any `knowledge/` file with an `effective_date` older than 18 months is flagged in the monthly audit. The owner must either update it or change `review_status` to `archived`.
 
 ---
 

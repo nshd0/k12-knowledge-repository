@@ -1,10 +1,9 @@
-# AI Layer
+# ai/
 
-This layer turns the repository into a stakeholder-aware assistant.
+**Purpose:** AI model configurations, prompt libraries, and experimental AI tooling used to extend or improve the knowledge system.
 
-## Capabilities
-- Search across frameworks, circulars, policies.
-- Summarize documents into stakeholder-specific briefs.
-- Recommend resources by role, grade, subject.
-- Detect new circulars and flag for review.
-- Answer questions with source citations.
+## Rules
+
+- Prompts must reference only approved knowledge from `knowledge/` or `data/`
+- Do not store model weights or large binary files here
+- Experimental work should be on a feature branch before merging to `main`

@@ -1,63 +1,104 @@
-# metadata/schema.yaml
-# Canonical metadata schema for all knowledge base documents.
-# Used by trigger_ingestion.yml to validate frontmatter before RAG indexing.
+# Frontmatter schema for knowledge/ files
+# All fields listed as required must be present in every knowledge Markdown file.
+# This schema is read by monthly_audit.py to validate content files.
 
 version: "1.0"
-effective_date: "2026-06-17"
-maintained_by: "nshd0/k12-knowledge-repository"
+updated: "2026-06-17"
 
-required_fields:
-  - id
-  - title
-  - stakeholder
-  - grade_band
-  - topic
-  - source
-  - effective_date
-  - content_owner
-  - review_status
-  - license
+fields:
 
-field_definitions:
   id:
     type: string
-    pattern: "^[A-Z]{2}-[0-9]{3}$"
-    description: "Unique identifier matching data CSV IDs (e.g. FW-001)"
+    required: true
+    description: Unique identifier matching the row ID in data/master_repository.csv
+    pattern: "^(FW|CR|CB|AS|PD|SR)-[0-9]{3}$"
+    example: FW-001
+
   title:
     type: string
-    description: "Short descriptive title"
+    required: true
+    description: Short, descriptive title for the knowledge entry
+    max_length: 120
+
   stakeholder:
     type: array
+    required: true
+    description: One or more stakeholder groups this entry is written for
     items:
-      enum: [Principal, Teacher, Student, Parent, Coordinator, All]
-    description: "Target audience roles"
+      enum:
+        - Principal
+        - Teacher
+        - Student
+        - Parent
+        - Coordinator
+        - All
+
   grade_band:
     type: string
-    enum: [Foundational, Preparatory, Middle, Secondary, All]
-    description: "NEP 2020 stage (5+3+3+4)"
+    required: true
+    description: School stage this entry applies to
+    enum:
+      - Foundational
+      - Preparatory
+      - Middle
+      - Secondary
+      - All
+
   topic:
     type: string
-    description: "Domain topic e.g. Assessment, Pedagogy, Policy, Curriculum"
+    required: true
+    description: Primary topic domain
+    enum:
+      - Policy
+      - Curriculum
+      - Assessment
+      - Pedagogy
+      - Capacity Building
+      - Subject Resource
+      - Governance
+
   source:
     type: string
-    description: "Authoritative source name e.g. NEP 2020, NCF-SE 2023, CBSE"
+    required: true
+    description: Short name of the primary official source (e.g. NEP 2020, CBSE Circular)
+
   effective_date:
     type: string
-    format: date
-    description: "YYYY-MM-DD date the content became effective or was last verified"
+    required: true
+    description: Publication or effective date of the source document (ISO 8601)
+    format: "YYYY-MM-DD"
+    stale_threshold_months: 18
+    note: >-
+      Files whose effective_date is more than 18 months old will be flagged
+      as stale in the monthly audit and must be reviewed before staying active.
+
   content_owner:
     type: string
-    description: "Organisation responsible for the content e.g. NCERT, CBSE, MoE"
+    required: true
+    description: Official body or person responsible for the source content
+    example: Ministry of Education
+
   review_status:
     type: string
-    enum: [approved, pending_review, archived]
-    description: "Must be 'approved' before content is ingested into RAG index"
+    required: true
+    description: Content review state — only 'approved' files enter the RAG index
+    enum:
+      - approved
+      - pending_review
+      - archived
+      - superseded
+
   license:
     type: string
-    description: "License for original summaries e.g. CC BY-SA 4.0"
+    required: true
+    description: License under which the summary may be reused
+    example: CC BY-SA 4.0
 
-ingestion_rules:
-  block_if_review_status_not_approved: true
-  require_learning_outcome_in_alignment_map: false
-  allow_external_links: true
-  block_ncert_textbook_prose: true
+# Validation rules applied by monthly_audit.py
+validation:
+  check_missing_fields: true
+  check_stale_effective_date: true
+  stale_threshold_months: 18
+  check_unknown_enum_values: true
+  check_id_matches_master_repository: true
+  check_duplicate_ids: true
