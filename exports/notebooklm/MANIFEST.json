@@ -1,0 +1,42 @@
+{
+  "generated": "2026-06-22",
+  "source": "data/master_repository.csv",
+  "packs": {
+    "principal": {
+      "file": "principal-pack.md",
+      "records": 31,
+      "sha256": "3e4b6a8d607879ce6d3f6b3912b359b82708054469ad591ca9ffbb01e98ce4ad",
+      "notebook": "NotebookLM \u2192 Principal Notebook"
+    },
+    "teacher": {
+      "file": "teacher-pack.md",
+      "records": 51,
+      "sha256": "66229baf6ed4b16c4f74e6f48885610186ec222524a58dc2b81327ed76db9491",
+      "notebook": "NotebookLM \u2192 Teacher Notebook"
+    },
+    "student": {
+      "file": "student-pack.md",
+      "records": 20,
+      "sha256": "1f8eaf692823b4416a1c0d5a0a520d3d4ff3e72345f52b3f269cd8892f1976a6",
+      "notebook": "NotebookLM \u2192 Student Notebook"
+    },
+    "parent": {
+      "file": "parent-pack.md",
+      "records": 0,
+      "sha256": "ee3d48a06a6ea3624baa5f30f310a454de4b65a3dec8476310f3b75e9196f0e0",
+      "notebook": "NotebookLM \u2192 Parent Notebook"
+    },
+    "coordinator": {
+      "file": "coordinator-pack.md",
+      "records": 63,
+      "sha256": "06ccf75d19ff21773afcc3b3e22df400107b1e8c3ee4323af41853c8ffff778e",
+      "notebook": "NotebookLM \u2192 Coordinator Notebook"
+    },
+    "master": {
+      "file": "master-pack.md",
+      "records": 63,
+      "sha256": "674a87c35ba8d0febdd75b1c5a602547e55adea8beaecaa781f1a8a823784029",
+      "notebook": "NotebookLM \u2192 Master Notebook"
+    }
+  }
+}
