@@ -1,0 +1,77 @@
+{
+  "checked": "2026-07-01T08:05:33.871882+00:00",
+  "results": [
+    {
+      "source": "Ministry of Education",
+      "url": "https://www.education.gov.in",
+      "status": "403",
+      "result": "FAIL"
+    },
+    {
+      "source": "NCERT",
+      "url": "https://ncert.nic.in",
+      "status": "ERROR: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+      "result": "FAIL"
+    },
+    {
+      "source": "CBSE Student Circulars",
+      "url": "https://www.cbse.gov.in/cbsenew/list-of-circulars-related-to-student.html",
+      "status": "403",
+      "result": "FAIL"
+    },
+    {
+      "source": "CBSE SARAS Portal",
+      "url": "https://saras.cbse.gov.in/saras/Home/Circulars",
+      "status": "ERROR: HTTPSConnectionPool(host='saras.cbse.gov.in', port=443): Max retries exceeded with url: /saras/Home/Circulars (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1010)')))",
+      "result": "FAIL"
+    },
+    {
+      "source": "CBSE Academic",
+      "url": "https://cbseacademic.nic.in",
+      "status": "200",
+      "result": "OK"
+    },
+    {
+      "source": "Delhi DoE",
+      "url": "https://www.edudel.nic.in",
+      "status": "200",
+      "result": "OK"
+    },
+    {
+      "source": "DIKSHA",
+      "url": "https://diksha.gov.in",
+      "status": "200",
+      "result": "OK"
+    },
+    {
+      "source": "NIPUN Bharat",
+      "url": "https://nipunbharat.education.gov.in",
+      "status": "ERROR: HTTPSConnectionPool(host='nipunbharat.education.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='nipunbharat.education.gov.in', port=443) at 0x7f97fa3471d0>, 'Connection to nipunbharat.education.gov.in timed out. (connect timeout=12)'))",
+      "result": "FAIL"
+    },
+    {
+      "source": "PARAKH",
+      "url": "https://parakh.gov.in",
+      "status": "ERROR: HTTPSConnectionPool(host='parakh.gov.in', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='parakh.gov.in', port=443): Failed to resolve 'parakh.gov.in' ([Errno -2] Name or service not known)\"))",
+      "result": "FAIL"
+    },
+    {
+      "source": "NCTE",
+      "url": "https://ncte.gov.in",
+      "status": "ERROR: HTTPSConnectionPool(host='ncte.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='ncte.gov.in', port=443) at 0x7f97fa37d7f0>, 'Connection to ncte.gov.in timed out. (connect timeout=12)'))",
+      "result": "FAIL"
+    },
+    {
+      "source": "iGOT Karmayogi",
+      "url": "https://igotkarmayogi.gov.in",
+      "status": "200",
+      "result": "OK"
+    },
+    {
+      "source": "NISHTHA",
+      "url": "https://itpd.ncert.gov.in",
+      "status": "200",
+      "result": "OK"
+    }
+  ]
+}
