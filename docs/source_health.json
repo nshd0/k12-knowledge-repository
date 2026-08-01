@@ -1,5 +1,5 @@
 {
-  "checked": "2026-07-01T08:05:33.871882+00:00",
+  "checked": "2026-08-01T06:22:30.186112+00:00",
   "results": [
     {
       "source": "Ministry of Education",
@@ -22,20 +22,20 @@
     {
       "source": "CBSE SARAS Portal",
       "url": "https://saras.cbse.gov.in/saras/Home/Circulars",
-      "status": "ERROR: HTTPSConnectionPool(host='saras.cbse.gov.in', port=443): Max retries exceeded with url: /saras/Home/Circulars (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1010)')))",
+      "status": "404",
       "result": "FAIL"
     },
     {
       "source": "CBSE Academic",
       "url": "https://cbseacademic.nic.in",
-      "status": "200",
-      "result": "OK"
+      "status": "ERROR: HTTPSConnectionPool(host='cbseacademic.nic.in', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1010)')))",
+      "result": "FAIL"
     },
     {
       "source": "Delhi DoE",
       "url": "https://www.edudel.nic.in",
-      "status": "200",
-      "result": "OK"
+      "status": "ERROR: HTTPSConnectionPool(host='www.edudel.nic.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.edudel.nic.in', port=443) at 0x7f28bb47f770>, 'Connection to www.edudel.nic.in timed out. (connect timeout=12)'))",
+      "result": "FAIL"
     },
     {
       "source": "DIKSHA",
@@ -46,7 +46,7 @@
     {
       "source": "NIPUN Bharat",
       "url": "https://nipunbharat.education.gov.in",
-      "status": "ERROR: HTTPSConnectionPool(host='nipunbharat.education.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='nipunbharat.education.gov.in', port=443) at 0x7f97fa3471d0>, 'Connection to nipunbharat.education.gov.in timed out. (connect timeout=12)'))",
+      "status": "ERROR: HTTPSConnectionPool(host='nipunbharat.education.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='nipunbharat.education.gov.in', port=443) at 0x7f28bb4b0f50>, 'Connection to nipunbharat.education.gov.in timed out. (connect timeout=12)'))",
       "result": "FAIL"
     },
     {
@@ -58,7 +58,7 @@
     {
       "source": "NCTE",
       "url": "https://ncte.gov.in",
-      "status": "ERROR: HTTPSConnectionPool(host='ncte.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='ncte.gov.in', port=443) at 0x7f97fa37d7f0>, 'Connection to ncte.gov.in timed out. (connect timeout=12)'))",
+      "status": "ERROR: HTTPSConnectionPool(host='ncte.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='ncte.gov.in', port=443) at 0x7f28bb4b2240>, 'Connection to ncte.gov.in timed out. (connect timeout=12)'))",
       "result": "FAIL"
     },
     {
@@ -70,8 +70,8 @@
     {
       "source": "NISHTHA",
       "url": "https://itpd.ncert.gov.in",
-      "status": "200",
-      "result": "OK"
+      "status": "ERROR: HTTPSConnectionPool(host='itpd.ncert.gov.in', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='itpd.ncert.gov.in', port=443) at 0x7f28bb4b1220>, 'Connection to itpd.ncert.gov.in timed out. (connect timeout=12)'))",
+      "result": "FAIL"
     }
   ]
 }
